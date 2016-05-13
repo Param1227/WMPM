@@ -22,7 +22,9 @@ public class CamelHelloWorldExample {
 			template.sendBody("activemq:test.queue", "Hello World");
 			Thread.sleep(2000);
 		} finally {
+			
 			context.stop();
 		}
+		
 	}
 }
