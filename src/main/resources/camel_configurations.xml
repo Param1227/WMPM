@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://camel.apache.org/schema/cxf"
+	xmlns:broker="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="
+         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd
+         http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+         http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+         
+      	<bean id="mongoURI" class="com.mongodb.MongoURI">
+			<constructor-arg index="0" value="mongodb://trainbooking:workflow@ds027017.mongolab.com:27017/booking" />
+		</bean>
+		
+		<bean id="mongoDB" class="com.mongodb.Mongo">
+			<constructor-arg index="0" ref="mongoURI" />
+		</bean>
+        
+        <bean id="testBean" class="com.javacodegeeks.camel.TestBean"/>   
+		</bean>
+		
+		<-- Routes -->
+		<bean id="testBuilder" class="at.ac.wmpm.booking.route.TestRouteBuilder"/>
+		
+		<camelContext id="myConfig" xmlns="http://camel.apache.org/schema/spring">
+			<routeBuilder ref="testBuilder" />   
+		</camelContext>
+			 
+</beans>
