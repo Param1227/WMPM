@@ -136,4 +136,116 @@
 		</dependency>
 		
   </dependencies>
+  
+  
+	<build>
+		<finalName>${project.artifactId}</finalName>
+
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>wagon-maven-plugin</artifactId>
+				<version>1.0</version>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>download-single</goal>
+						</goals>
+						<configuration>
+							<url>${swagger.url}</url>
+							<fromFile>v${swagger-ui.version}.tar.gz</fromFile>
+							<toFile>${project.build.directory}/swagger-ui-${swagger-ui.version}.tar.gz</toFile>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<echo message="Decompress archive" />
+								<gunzip
+									src="${project.build.directory}/swagger-ui-${swagger-ui.version}.tar.gz" />
+								<untar
+									src="${project.build.directory}/swagger-ui-${swagger-ui.version}.tar"
+									dest="${project.build.directory}" />
+								<echo message="moving resources" />
+								<move todir="${destDir}" overwrite="yes">
+									<fileset
+										dir="${project.build.directory}/swagger-ui-${swagger-ui.version}/dist" />
+								</move>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/classes/</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/webapp</directory>
+									<filtering>false</filtering>
+								</resource>
+								<!-- Copy swagger-ui resources to classes directory to be able to 
+									use it with mvn jetty:run -->
+								<resource>
+									<directory>${destDir}</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!-- Step 4. Add Swagger-ui Resources to the WAR -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+					<webResources>
+						<resource>
+							<directory>target/swagger-ui/</directory>
+							<includes>
+								<include>**/*.*</include>
+							</includes>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+
+			<!-- allows running this example with mvn:jetty-run -->
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>${jetty9-version}</version>
+				<configuration>
+					<webAppSourceDirectory>target/classes</webAppSourceDirectory>
+				</configuration>
+			</plugin>
+			
+		</plugins>
+	</build>
 </project>
