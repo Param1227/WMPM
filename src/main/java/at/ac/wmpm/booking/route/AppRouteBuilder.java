@@ -14,6 +14,7 @@ public class AppRouteBuilder extends RouteBuilder{
 		.dataFormatProperty("prettyPrint", "true")
 		.port(8080);
 
+		
 		// OFFER
 		rest("offer").description("Get offers")
 		.consumes("application/json").produces("application/json")

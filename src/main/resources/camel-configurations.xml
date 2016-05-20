@@ -17,7 +17,6 @@
 			<constructor-arg index="0" ref="mongoURI" />
 		</bean>
         
-        
         <!-- BEANS -->
         <bean id="missinginputError" class="at.ac.wmpm.booking.processor.MissingInputError" />
      	
