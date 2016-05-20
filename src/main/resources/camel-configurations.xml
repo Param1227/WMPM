@@ -10,7 +10,7 @@
          http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
          
       	<bean id="mongoURI" class="com.mongodb.MongoURI">
-			<constructor-arg index="0" value="mongodb://trainbooking:workflow@ds027017.mongolab.com:27017/booking" />
+			<constructor-arg index="0" value="mongodb://test:test@ds025180.mlab.com:25180/trainbooking" />
 		</bean>
 		
 		<bean id="mongoDB" class="com.mongodb.Mongo">
