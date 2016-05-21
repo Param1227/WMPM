@@ -19,10 +19,23 @@
         
         <!-- BEANS -->
         <bean id="missinginputError" class="at.ac.wmpm.booking.processor.MissingInputError" />
+        <bean id="requestError" class="at.ac.wmpm.booking.processor.RequestNotFoundError" />
      	
 		<!-- ROUTES -->
 		<bean id="appRoute" class="at.ac.wmpm.booking.route.AppRouteBuilder" />
 		<bean id="offerRoute" class="at.ac.wmpm.booking.route.OfferRouteBuilder"/>
+		<bean id="getTrainsRoute" class="at.ac.wmpm.booking.route.GetTrainsRouteBuilder"/>
+		<bean id="prepResponseRoute" class="at.ac.wmpm.booking.route.PrepareResponseRouteBuilder"/>
+		
+		<!-- TRAIN1 ROUTES -->
+		<bean id="train1Offers" class="at.ac.wmpm.train1.route.Train1OfferRouteBuilder" />
+		
+		<!-- TRAIN2 ROUTES -->
+		<bean id="train2Offers" class="at.ac.wmpm.train2.route.Train2OfferRouteBuilder" />
+		
+		<!-- SERVICES -->
+		<bean id="train1Service" class="at.ac.wmpm.train1.service.TrainService" />
+		<bean id="train2Service" class="at.ac.wmpm.train2.service.TrainService" />
 		
 		<!-- JMS -->
 		<broker:broker persistent="false" brokerName="myBroker">
@@ -39,12 +52,45 @@
 		<bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
 			<property name="brokerURL" value="vm://myBroker" />
 		</bean>
-		
-		
+			
+			
 		<camelContext id="myConfig" xmlns="http://camel.apache.org/schema/spring">
 			<routeBuilder ref="appRoute" />
-			<routeBuilder ref="offerRoute" />   
+			<routeBuilder ref="offerRoute" />
+			<routeBuilder ref="train1Offers" />
+			<routeBuilder ref="train2Offers" />   
 		
-		</camelContext>
-			 
+		<dataFormats>
+			<json id="pojo2json" library="Jackson" disableFeatures="FAIL_ON_EMPTY_BEANS" />
+			<xmljson id="xmljson" />
+		</dataFormats>
+		
+		<!-- get offers form train1 + sort route -->
+		<route id="rest-forward-request" streamCache="true">
+			<from uri="direct:forward" />			
+			<!-- <process ref="sortOffers" />  -->
+			<choice>
+				<when>
+					<simple>${body} == null</simple>
+					<process ref="requestError" />
+				</when>
+				<otherwise>
+			<!--		<enrich uri="direct:addWeather" strategyRef="aggregationBean" /> -->
+				</otherwise>
+			</choice>
+		</route>
+		
+		<route streamCache="true">
+			<from uri="direct:getTrain1" />
+			<to uri="http://localhost:8081/req/" />
+			<log message="Response from Train 1: ${body}" />
+		</route>
+		
+		<route streamCache="true">
+			<from uri="direct:getTrain2" />
+			<to uri="http://localhost:8082/req/" />
+			<log message="Response from Train 2: ${body}" />
+		</route>
+		
+	</camelContext>	 
 </beans>

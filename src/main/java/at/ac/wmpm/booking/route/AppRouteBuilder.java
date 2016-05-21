@@ -14,12 +14,11 @@ public class AppRouteBuilder extends RouteBuilder{
 		.dataFormatProperty("prettyPrint", "true")
 		.port(8080);
 
-		
 		// OFFER
-		rest("offer").description("Get offers")
+		rest("/offer").description("Get offers")
 		.consumes("application/json").produces("application/json")
 
-		.get("{from}/{to}").description("Get offers. Try for example: 1435795200000")
+		.get("/{date}/{from}/{to}").description("Get offers. Try for example: 1435795200000")
 		.to("direct:processInput");
 
 	}
