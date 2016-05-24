@@ -9,11 +9,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class Offer {
 
 	private UUID id;
-
 	private String from;
-
 	private String to;
-
 	private String train;
 
 	//@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm")

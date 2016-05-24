@@ -40,6 +40,10 @@ public class Train1Respository {
 		ridesToBeAdded.add(new Ride("BNC", "VIE", new GregorianCalendar(2015, 6, 2, 17, 12).getTime(), 160));
 		ridesToBeAdded.add(new Ride("MUC", "VIE", new GregorianCalendar(2015, 6, 2, 17, 12).getTime(), 45));
 		
+		ridesToBeAdded.add(new Ride("VIE", "CPH", new GregorianCalendar(2015, 6, 2, 17, 12).getTime(), 125));
+		//ridesToBeAdded.add(new Ride("BNC", "VIE", new GregorianCalendar(2015, 6, 2, 17, 12).getTime(), 160));
+		//ridesToBeAdded.add(new Ride("MUC", "VIE", new GregorianCalendar(2015, 6, 2, 17, 12).getTime(), 45));
+		
 		
 		for(Ride ride:ridesToBeAdded) {
 			List<Seat> seats = new ArrayList<Seat>();

@@ -9,8 +9,8 @@ public class Train2OfferRouteBuilder extends RouteBuilder {
 		// TODO Auto-generated method stub
 
 		from("restlet:http://localhost:8082/req/{date}/{from}/{to}")
-		.to("bean:train2Service?method=getRides(${head.from}, ${head.to}, ${head.date})")
-		.marshal("pojo2json");
+		.to("bean:train2Service?method=getRides(${head.from}, ${head.to}, ${head.date})");
+		//.marshal("pojo2json");
 	}
 
 }

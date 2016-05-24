@@ -3,6 +3,8 @@ package at.ac.wmpm.booking.model;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 public class Seat {
 
 	private UUID id;

@@ -4,9 +4,10 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 public class Ride {
-
+	
 	private UUID id;
 	private String from;
 	private String to;

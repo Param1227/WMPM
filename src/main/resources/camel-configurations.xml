@@ -10,7 +10,10 @@
          http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
          
       	<bean id="mongoURI" class="com.mongodb.MongoURI">
+      	
 			<constructor-arg index="0" value="mongodb://test:test@ds025180.mlab.com:25180/trainbooking" />
+
+
 		</bean>
 		
 		<bean id="mongoDB" class="com.mongodb.Mongo">
@@ -25,7 +28,9 @@
 		<bean id="appRoute" class="at.ac.wmpm.booking.route.AppRouteBuilder" />
 		<bean id="offerRoute" class="at.ac.wmpm.booking.route.OfferRouteBuilder"/>
 		<bean id="getTrainsRoute" class="at.ac.wmpm.booking.route.GetTrainsRouteBuilder"/>
-		<bean id="prepResponseRoute" class="at.ac.wmpm.booking.route.PrepareResponseRouteBuilder"/>
+		<bean id="prepareResponse" class="at.ac.wmpm.booking.route.PrepareResponseRouteBuilder"/>
+		
+	<!-- <bean id="prepResponseRoute" class="at.ac.wmpm.booking.route.PrepareResponseRouteBuilder"/> -->
 		
 		<!-- TRAIN1 ROUTES -->
 		<bean id="train1Offers" class="at.ac.wmpm.train1.route.Train1OfferRouteBuilder" />
@@ -58,7 +63,12 @@
 			<routeBuilder ref="appRoute" />
 			<routeBuilder ref="offerRoute" />
 			<routeBuilder ref="train1Offers" />
-			<routeBuilder ref="train2Offers" />   
+			<routeBuilder ref="train2Offers" /> 
+			<routeBuilder ref="prepareResponse" /> 
+			<routeBuilder ref="getTrainsRoute" /> 
+			<routeBuilder ref="train1Offers" /> 
+			<routeBuilder ref="train2Offers" /> 
+			
 		
 		<dataFormats>
 			<json id="pojo2json" library="Jackson" disableFeatures="FAIL_ON_EMPTY_BEANS" />
@@ -84,13 +94,15 @@
 			<from uri="direct:getTrain1" />
 			<to uri="http://localhost:8081/req/" />
 			<log message="Response from Train 1: ${body}" />
+			
 		</route>
 		
 		<route streamCache="true">
 			<from uri="direct:getTrain2" />
 			<to uri="http://localhost:8082/req/" />
 			<log message="Response from Train 2: ${body}" />
-		</route>
+			
+</route>
 		
 	</camelContext>	 
 </beans>
