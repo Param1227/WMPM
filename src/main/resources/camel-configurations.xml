@@ -10,7 +10,6 @@
          http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
          
       	<bean id="mongoURI" class="com.mongodb.MongoURI">
-      	
 			<constructor-arg index="0" value="mongodb://test:test@ds025180.mlab.com:25180/trainbooking" />
 
 
@@ -42,22 +41,6 @@
 		<bean id="train1Service" class="at.ac.wmpm.train1.service.TrainService" />
 		<bean id="train2Service" class="at.ac.wmpm.train2.service.TrainService" />
 		
-		<!-- JMS -->
-		<broker:broker persistent="false" brokerName="myBroker">
-			<broker:transportConnectors>
-				<!-- expose a VM transport for in-JVM transport between AMQ and Camel 
-					on the server side -->
-				<broker:transportConnector name="vm"
-					uri="vm://myBroker" />
-				<!-- expose a TCP transport for clients to use -->
-				<broker:transportConnector name="tcp"
-					uri="tcp://localhost:61610" />
-			</broker:transportConnectors>
-		</broker:broker>
-		<bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
-			<property name="brokerURL" value="vm://myBroker" />
-		</bean>
-			
 			
 		<camelContext id="myConfig" xmlns="http://camel.apache.org/schema/spring">
 			<routeBuilder ref="appRoute" />
