@@ -50,6 +50,7 @@ public class OfferRouteBuilder extends RouteBuilder {
 		.choice()
 		.when(simple("${body} == null")).bean(new MissingInputError(), "process")
 		.otherwise()
+		.log("Hier komme ich hin 2")
 		.to("direct:prepareResponse");
 	}
 

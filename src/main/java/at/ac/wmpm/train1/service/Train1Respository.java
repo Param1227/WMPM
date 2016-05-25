@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import at.ac.wmpm.booking.model.Category;
 import at.ac.wmpm.booking.model.Ride;
 import at.ac.wmpm.booking.model.Offer;
@@ -17,6 +20,8 @@ import at.ac.wmpm.booking.model.Seat;
 
 public class Train1Respository {
 
+	private static final Logger LOG = LoggerFactory.getLogger(Train1Respository.class);
+	
 	private static HashMap<Ride, List<Seat>> rides;
 	
 	public static void initialize() {
@@ -60,7 +65,7 @@ public class Train1Respository {
 		initialize();
 		
 		List<Offer> offers = new ArrayList<Offer>();
-		
+		LOG.trace("Hier komm ich hin 4");
 		for(Ride ride:rides.keySet()) {
 			if(ride.getFrom().equals(from) && ride.getTo().equals(to)) {
 				

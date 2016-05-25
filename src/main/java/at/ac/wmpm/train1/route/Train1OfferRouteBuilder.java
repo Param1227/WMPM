@@ -9,6 +9,7 @@ public class Train1OfferRouteBuilder extends RouteBuilder{
 		// TODO Auto-generated method stub
 		
 		from("restlet:http://localhost:8081/req/{date}/{from}/{to}")
+		.log("Hier komme ich hin 9")
 		.to("bean:train1Service?method=getRides(${head.from}, ${head.to}, ${head.date})")
 		//.marshal("pojo2json")
     	//.unmarshal("xmljson")

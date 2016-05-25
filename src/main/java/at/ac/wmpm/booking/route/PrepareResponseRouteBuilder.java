@@ -13,6 +13,7 @@ public class PrepareResponseRouteBuilder extends RouteBuilder {
 		.removeHeaders("CamelHttp*")
 		.setHeader("CamelHttp", simple("${header.date}/${header.from}/${header.to}"))
 		.setHeader("CamelHttpMethod", constant("GET"))
+		.log("Hier komme ich hin")
 		.enrich("direct:getTrains")
 		.log("EXCHANGE: ${body}")
 		.to("direct:forward");

@@ -10,8 +10,9 @@ public class GetTrainsRouteBuilder extends RouteBuilder {
 		// TODO Auto-generated method stub
 
 		from("direct:getTrains")
-		.multicast(new GroupedExchangeAggregationStrategy())
-        .parallelProcessing() //as we do not want to have seq processing
+		.log("Hier komme ich hin 3")
+		//.multicast(new GroupedExchangeAggregationStrategy())
+        //.parallelProcessing() //as we do not want to have seq processing
        // .onPrepareRef("prepareMulticastProcessor")
             .enrich("direct:getTrain1")	//http://localhost:8082/request/")
        //     .enrich("direct:getTrain2")	//http://localhost:8083/request/")
