@@ -119,4 +119,12 @@ public class Offer {
 		this.category = category;
 	}
 
+	@Override
+	public String toString() {
+		return "Offer [id=" + id + ", from=" + from + ", to=" + to + ", train=" + train + ", date=" + date
+				+ ", duration=" + duration + ", price=" + price + ", category=" + category + "]";
+	}
+	
+	
+
 }

@@ -10,9 +10,9 @@ public class Train1OfferRouteBuilder extends RouteBuilder{
 		
 		from("restlet:http://localhost:8081/req/{date}/{from}/{to}")
 		.log("Hier komme ich hin 9")
-		.to("bean:train1Service?method=getRides(${head.from}, ${head.to}, ${head.date})")
-		//.marshal("pojo2json")
-    	//.unmarshal("xmljson")
+		.to("bean:train1Service?method=getRides(${header.from}, ${header.to}, ${header.date})")
+		.marshal("pojo2json")
+    	.unmarshal("xmljson")
     	.log("Train1 response: ${body}");
 	}
 

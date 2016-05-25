@@ -94,6 +94,8 @@
 			<from uri="direct:getTrain1" />
 			<to uri="http://localhost:8081/req/" />
 			<log message="Response from Train 1: ${body}" />
+			<marshal ref="xmljson" />
+			<marshal ref="pojo2json" />
 			
 		</route>
 		

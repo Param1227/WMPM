@@ -1,5 +1,6 @@
 package at.ac.wmpm.booking.route;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 
 public class PrepareResponseRouteBuilder extends RouteBuilder {
@@ -12,10 +13,13 @@ public class PrepareResponseRouteBuilder extends RouteBuilder {
 		.setBody(simple("null")) 
 		.removeHeaders("CamelHttp*")
 		.setHeader("CamelHttp", simple("${header.date}/${header.from}/${header.to}"))
+		.log("${header.date}/${header.from}/${header.to}")
 		.setHeader("CamelHttpMethod", constant("GET"))
-		.log("Hier komme ich hin")
+		.log("Hier komme ich hin Lukas")
 		.enrich("direct:getTrains")
-		.log("EXCHANGE: ${body}")
+		.setBody(property(Exchange.GROUPED_EXCHANGE))
+		.log("EXCHANGE-HEADER: ${header.date}}")
+		.log("EXCHANGE-BODY: ${body}")
 		.to("direct:forward");
 	}
 
