@@ -21,20 +21,21 @@ public class PrepareTrain1Offers implements Processor{
 	public void process(Exchange exchange) throws Exception {
 
 		// create new jackson mapper
-//		ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = new ObjectMapper();
 //
-//		List<Offer> offers = mapper.readValue(exchange.getIn().getBody(String.class), new TypeReference<List<Offer>>() { });
-//		List<Offer> result = new ArrayList<Offer>();
-//		
-//		if (offers != null) {
-//			for (Offer o : offers) {
-//				//TicketMapper.registerOffer(o, "Airline1");
-//				o.setTrain("oebb");
-//				result.add(o);
-//			}
-//			
-//			exchange.getOut().setBody(result);
-//		}
+		List<Offer> offers = mapper.readValue(exchange.getIn().getBody(String.class), new TypeReference<List<Offer>>() { });
+		List<Offer> result = new ArrayList<Offer>();
+		LOG.debug("PrepareTrain");
+		if (offers != null) {
+			for (Offer o : offers) {
+				//TicketMapper.registerOffer(o, "Airline1");
+				LOG.debug("Offer: " + o.getFrom());
+				o.setTrain("oebb");
+				result.add(o);
+			}
+			
+			exchange.getOut().setBody(result);
+		}
 
 	}
 }

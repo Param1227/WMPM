@@ -22,6 +22,8 @@
         <!-- BEANS -->
         <bean id="missinginputError" class="at.ac.wmpm.booking.processor.MissingInputError" />
         <bean id="requestError" class="at.ac.wmpm.booking.processor.RequestNotFoundError" />
+        <bean id="prepareTrain1Offers" class="at.ac.wmpm.booking.processor.PrepareTrain1Offers" />
+        <bean id="preparePathRequestProcessor" class="at.ac.wmpm.booking.processor.PreparePathRequestProcessor" />
      	
 		<!-- ROUTES -->
 		<bean id="appRoute" class="at.ac.wmpm.booking.route.AppRouteBuilder" />
@@ -75,15 +77,18 @@
 		
 		<route streamCache="true">
 			<from uri="direct:getTrain1" />
+			<log message="Ich komme in die Camel Config" />
 			<to uri="http://localhost:8081/req/" />
 			<log message="Response from Train 1: ${body}" />
-			<marshal ref="xmljson" />
+			
+			<process ref="prepareTrain1Offers" />
 			<marshal ref="pojo2json" />
 			
 		</route>
 		
 		<route streamCache="true">
 			<from uri="direct:getTrain2" />
+			<log message="Ich komme in die Camel Config 2" />
 			<to uri="http://localhost:8082/req/" />
 			<log message="Response from Train 2: ${body}" />
 			

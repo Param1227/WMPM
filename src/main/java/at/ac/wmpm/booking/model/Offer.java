@@ -1,12 +1,14 @@
 package at.ac.wmpm.booking.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-public class Offer {
+public class Offer implements Serializable, Comparable<Offer> {
+
 
 	private UUID id;
 	private String from;
@@ -24,7 +26,7 @@ public class Offer {
 	private Category category;
 
 	public Offer() {
-		super();
+		
 	}
 	
 	public Offer(UUID id, String from, String to, String train, Date date,
@@ -43,7 +45,7 @@ public class Offer {
 			int duration, Category category, BigDecimal price) {
 		this.from = from;
 		this.to = to;
-		this.train = train;
+		//this.train = train;
 		this.date = date;
 		this.duration = duration;
 		this.price = price;
@@ -125,6 +127,9 @@ public class Offer {
 				+ ", duration=" + duration + ", price=" + price + ", category=" + category + "]";
 	}
 	
-	
+	@Override
+	public int compareTo(Offer o) {
+		return this.price.compareTo(o.price);
+	}
 
 }

@@ -7,7 +7,7 @@ import at.ac.wmpm.booking.model.Offer;
 
 public class TrainService {
 	
-	public List<Offer> getRides(String from, String to, Long date) {
+	public List<Offer> getRides(Long date, String from, String to) {
 		
 		List<Offer> offers = Train1Respository.getOffers(from, to, new Date(date));
 		
