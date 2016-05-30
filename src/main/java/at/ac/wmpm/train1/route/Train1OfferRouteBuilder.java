@@ -9,10 +9,11 @@ public class Train1OfferRouteBuilder extends RouteBuilder{
 		// TODO Auto-generated method stub
 		
 		from("restlet:http://localhost:8081/req/{date}/{from}/{to}")
+		.removeHeaders("CamelHttp*")
 		.log("Hier komme ich hin 9")
 		.to("bean:train1Service?method=getRides(${header.date}, ${header.from}, ${header.to})")
 		.marshal("pojo2json")
-    	//.unmarshal("xmljson")
+    	.unmarshal("xmljson")
     	.log("Train1 response: ${body}");
 	}
 

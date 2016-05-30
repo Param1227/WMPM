@@ -13,9 +13,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.ac.wmpm.booking.model.Offer;
 
-public class PrepareTrain1Offers implements Processor{
+public class PrepareTrain2Offers implements Processor{
 
-	private static final Logger LOG = LoggerFactory.getLogger(PrepareTrain1Offers.class);
+	private static final Logger LOG = LoggerFactory.getLogger(PrepareTrain2Offers.class);
 
 	@Override
 	public void process(Exchange exchange) throws Exception {
@@ -25,12 +25,12 @@ public class PrepareTrain1Offers implements Processor{
 		LOG.debug(exchange.toString());
 		List<Offer> offers = mapper.readValue(exchange.getIn().getBody(String.class), new TypeReference<List<Offer>>() { });
 		List<Offer> result = new ArrayList<Offer>();
-		LOG.debug("PrepareTrain");
+		LOG.debug("PrepareTrain2");
 		if (offers != null) {
 			for (Offer o : offers) {
 				//TicketMapper.registerOffer(o, "Airline1");
 				LOG.debug("Offer: " + o.getFrom());
-				o.setTrain("oebb");
+				o.setTrain("db");
 				result.add(o);
 			}
 			
@@ -38,4 +38,5 @@ public class PrepareTrain1Offers implements Processor{
 		}
 
 	}
+
 }

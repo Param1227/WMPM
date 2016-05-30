@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+
 public class Offer implements Serializable, Comparable<Offer> {
 
 
@@ -21,6 +22,7 @@ public class Offer implements Serializable, Comparable<Offer> {
 	// duration is displayed in minutes
 	private int duration;
 
+	@JsonSerialize(using = BigDecimalSerializer.class)
 	private BigDecimal price;
 	
 	private Category category;

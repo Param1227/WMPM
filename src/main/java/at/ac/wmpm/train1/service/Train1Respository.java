@@ -53,13 +53,21 @@ public class Train1Respository {
 			for(Ride ride:ridesToBeAdded) {
 				List<Seat> seats = new ArrayList<Seat>();
 
-				seats.add(new Seat(Category.FIRST, new BigDecimal(ride.getDuration()*10), true));
-				seats.add(new Seat(Category.FIRST, new BigDecimal(ride.getDuration()*6), true));
+				seats.add(new Seat(Category.FIRST, randomizePrice(new BigDecimal(ride.getDuration()*10)), true));
+				seats.add(new Seat(Category.FIRST, randomizePrice(new BigDecimal(ride.getDuration()*6)), true));
 
 				rides.put(ride,seats);
 			}
 		}
 	}
+	
+	private static BigDecimal randomizePrice(BigDecimal price) {
+		BigDecimal min = price.multiply(new BigDecimal(0.9));
+		BigDecimal max = price.multiply(new BigDecimal(1.1));
+		BigDecimal range = max.subtract(min); 
+		return min.add(range.multiply(new BigDecimal(Math.random()))); 
+	}
+
 
 	public static List<Offer> getOffers(String from, String to, Date date) {
 		// TODO Auto-generated method stub
