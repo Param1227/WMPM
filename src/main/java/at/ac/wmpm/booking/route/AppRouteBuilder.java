@@ -3,6 +3,8 @@ package at.ac.wmpm.booking.route;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
 
+import at.ac.wmpm.booking.model.Booking;
+
 public class AppRouteBuilder extends RouteBuilder{
 
 	@Override
@@ -25,8 +27,8 @@ public class AppRouteBuilder extends RouteBuilder{
 		rest("/book").description("Book a offer")
 		.consumes("application/json").produces("application/json")
 
-		.post("/{id}/{name}/{email}").description("Book an offer")
-		.to("");
+		.post("/").description("Book an offer").type(Booking.class)
+		.to("direct:processBooking");
 
 	}
 
