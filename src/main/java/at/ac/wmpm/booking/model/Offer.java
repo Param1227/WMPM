@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import at.ac.wmpm.booking.helper.MoneyFieldCalc;
 
 
 public class Offer implements Serializable, Comparable<Offer> {
@@ -22,7 +21,7 @@ public class Offer implements Serializable, Comparable<Offer> {
 	// duration is displayed in minutes
 	private int duration;
 
-	@JsonSerialize(using = MoneyFieldCalc.class)
+	@JsonSerialize(using = BigDecimalSerializer.class)
 	private BigDecimal price;
 	private Category category;
 	
