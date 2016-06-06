@@ -11,6 +11,8 @@ public class TrainService {
 		
 		List<Offer> offers = Train1Respository.getOffers(from, to, new Date(date));
 		
+		System.out.println("offer = "+offers.get(0).toString());
+		
 		return offers;
 	}
 	

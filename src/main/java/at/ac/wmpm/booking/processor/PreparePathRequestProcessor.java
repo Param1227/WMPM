@@ -10,10 +10,10 @@ public class PreparePathRequestProcessor  implements Processor {
     private static final Logger LOG = LoggerFactory.getLogger(PreparePathRequestProcessor.class);    
     @Override
     public void process(Exchange exchange) throws Exception {
+    	
 		exchange.getOut().setHeader("CamelHttpPath", exchange.getIn().getHeader("date") + "/" + exchange.getIn().getHeader("from") + "/" + exchange.getIn().getHeader("to"));
     	exchange.getOut().setHeader("CamelHttpMethod", "GET");
-        exchange.getOut().setBody(null);
-        System.out.println("PreparePathRequestProcessor");
+    	exchange.getOut().setBody(null);
     }
 
 

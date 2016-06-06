@@ -24,12 +24,15 @@ public class Train1Respository {
 
 	private static HashMap<Ride, List<Seat>> rides;
 
+	public Train1Respository() {
+	}
+	
 	public static void initialize() {
 
 		if(rides == null) {
 			rides = new HashMap<Ride, List<Seat>>();
 
-			LOG.trace("Ich komme in Train1Repository");
+			System.out.println("Ich komme in Train1Repository");
 			List<Ride> ridesToBeAdded = new ArrayList<Ride>();
 
 			ridesToBeAdded.add(new Ride("ROM", "VIE", new GregorianCalendar(2015, 6, 1, 8, 43).getTime(), 604));
@@ -71,10 +74,11 @@ public class Train1Respository {
 
 	public static List<Offer> getOffers(String from, String to, Date date) {
 		// TODO Auto-generated method stub
+		
 		initialize();
 
 		List<Offer> offers = new ArrayList<Offer>();
-		LOG.trace("Hier komm ich hin 4");
+		
 		for(Ride ride:rides.keySet()) {
 			if(ride.getFrom().equals(from) && ride.getTo().equals(to)) {
 

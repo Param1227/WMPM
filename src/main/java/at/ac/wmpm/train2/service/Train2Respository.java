@@ -38,7 +38,7 @@ public class Train2Respository {
 
 			for(Ride ride:ridesToBeAdded) {
 				List<Seat> seats = new ArrayList<Seat>();
-
+				System.out.println("FIRST FOR");
 				seats.add(new Seat(Category.FIRST, randomizePrice(new BigDecimal(ride.getDuration()*10)), true));
 				seats.add(new Seat(Category.FIRST, randomizePrice(new BigDecimal(ride.getDuration()*6)), true));
 
@@ -61,6 +61,7 @@ public class Train2Respository {
 		List<Offer> offers = new ArrayList<Offer>();
 
 		for(Ride ride:rides.keySet()) {
+			System.out.println("SECOND FOR");
 			if(ride.getFrom().equals(from) && ride.getTo().equals(to)) {
 
 				Calendar calendar = Calendar.getInstance();
@@ -75,15 +76,17 @@ public class Train2Respository {
 				if(ride.getDate().before(plusOne) && ride.getDate().after(minusOne)) {
 
 					for(Seat seat:rides.get(ride)) {
+						System.out.println("THIRD FOR");
+						
 						Offer offer = convertRideToOffer(ride, seat);
-
+						
 						offer.setId(UUID.randomUUID());
 						offers.add(offer);	
 					}
 				}
 			}
 		}
-
+		System.out.println("HERE I DONT HAVE AN EXCEPTION");
 		return offers;
 	}
 	public static Offer convertRideToOffer(Ride ride, Seat seat) {

@@ -6,10 +6,10 @@ import java.util.Date;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import at.ac.wmpm.booking.helper.MoneyFieldCalc;
 
 
 public class Offer implements Serializable, Comparable<Offer> {
-
 
 	private UUID id;
 	private String from;
@@ -22,25 +22,12 @@ public class Offer implements Serializable, Comparable<Offer> {
 	// duration is displayed in minutes
 	private int duration;
 
-	@JsonSerialize(using = BigDecimalSerializer.class)
+	@JsonSerialize(using = MoneyFieldCalc.class)
 	private BigDecimal price;
-	
 	private Category category;
-
+	
 	public Offer() {
 		
-	}
-	
-	public Offer(UUID id, String from, String to, String train, Date date,
-			int duration, BigDecimal price, Category category) {
-		this.id = id;
-		this.from = from;
-		this.to = to;
-		this.train = train;
-		this.date = date;
-		this.duration = duration;
-		this.price = price;
-		this.category = category;
 	}
 	
 	public Offer(String from, String to, Date date,
@@ -62,6 +49,7 @@ public class Offer implements Serializable, Comparable<Offer> {
 	public void setId(UUID id) {
 		this.id = id;
 	}
+	
 
 	public String getFrom() {
 		return from;
@@ -70,6 +58,7 @@ public class Offer implements Serializable, Comparable<Offer> {
 	public void setFrom(String from) {
 		this.from = from;
 	}
+	
 
 	public String getTo() {
 		return to;
@@ -78,6 +67,7 @@ public class Offer implements Serializable, Comparable<Offer> {
 	public void setTo(String to) {
 		this.to = to;
 	}
+	
 
 	public String getTrain() {
 		return train;
@@ -86,6 +76,7 @@ public class Offer implements Serializable, Comparable<Offer> {
 	public void setTrain(String train) {
 		this.train = train;
 	}
+	
 
 	public Date getDate() {
 		return date;
@@ -95,7 +86,6 @@ public class Offer implements Serializable, Comparable<Offer> {
 		this.date = date;
 	}
 
-
 	public int getDuration() {
 		return duration;
 	}
@@ -104,7 +94,6 @@ public class Offer implements Serializable, Comparable<Offer> {
 	public void setDuration(int duration) {
 		this.duration = duration;
 	}
-
 
 	public BigDecimal getPrice() {
 		return price;
@@ -126,7 +115,7 @@ public class Offer implements Serializable, Comparable<Offer> {
 	@Override
 	public String toString() {
 		return "Offer [id=" + id + ", from=" + from + ", to=" + to + ", train=" + train + ", date=" + date
-				+ ", duration=" + duration + ", price=" + price + ", category=" + category + "]";
+				+ ", duration=" + duration + ", category=" + category + ", price=" + price + "]";
 	}
 	
 	@Override

@@ -14,7 +14,7 @@ public class Train1OfferRouteBuilder extends RouteBuilder{
 		.to("bean:train1Service?method=getRides(${header.date}, ${header.from}, ${header.to})")
 		.marshal("pojo2json")
     	.unmarshal("xmljson")
-    	.log("Train1 response: ${body}");
+    	.log("Train1.2 response: ${body}");
 	}
 
 }

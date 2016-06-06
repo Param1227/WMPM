@@ -12,7 +12,7 @@ public class Ride {
 	private String from;
 	private String to;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm")
+//	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm")
 	private Date date;
 
 	// in minutes

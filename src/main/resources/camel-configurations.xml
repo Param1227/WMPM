@@ -65,15 +65,15 @@
 		<route id="rest-forward-request" streamCache="true">
 			<from uri="direct:forward" />			
 			<!-- <process ref="sortOffers" />  -->
-			<choice>
+			 <choice>
 				<when>
 					<simple>${body} == null</simple>
-					<process ref="requestError" />
+					<process ref="requestError" />  
 				</when>
 				<otherwise>
-			<!--		<enrich uri="direct:addWeather" strategyRef="aggregationBean" /> -->
+				<!-- 	<enrich uri="direct:addWeather" strategyRef="aggregationBean" />  --> 
 				</otherwise>
-			</choice>
+			</choice> 	
 		</route>
 		
 		<route streamCache="true">
@@ -90,7 +90,8 @@
 		<route streamCache="true">
 			<from uri="direct:getTrain2" />
 			<log message="Ich komme in die Camel Config 2" />
-			<to uri="http://localhost:8082/request/" />
+			<to uri="http://localhost:8083/request/" />
+			<log message="Response from Airline 2: ${body}" />
 			<process ref="prepareTrain2Offers" />
 			<marshal ref="pojo2json" />
 			

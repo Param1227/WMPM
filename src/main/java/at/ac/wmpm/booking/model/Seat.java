@@ -13,7 +13,7 @@ public class Seat {
 	private boolean booked;
 	
 	
-	public Seat (Category category, BigDecimal price, boolean window) {
+	public Seat (Category category, BigDecimal price, boolean booked) {
 		this.id = UUID.randomUUID();
 		this.category = category;
 		this.price = price;
