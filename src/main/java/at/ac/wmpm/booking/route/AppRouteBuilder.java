@@ -21,6 +21,13 @@ public class AppRouteBuilder extends RouteBuilder{
 		.get("/{date}/{from}/{to}").description("Get offers. Try for example:")
 		.to("direct:processInput");
 
+		// Booking
+		rest("/book").description("Book a offer")
+		.consumes("application/json").produces("application/json")
+
+		.post("/{id}/{name}/{email}").description("Book an offer")
+		.to("");
+
 	}
 
 }

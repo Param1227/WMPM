@@ -32,15 +32,15 @@ public class Train2Respository {
 			List<Ride> ridesToBeAdded = new ArrayList<Ride>();
 
 			ridesToBeAdded.add(new Ride("ROM", "VIE", new GregorianCalendar(2015, 6, 1, 8, 43).getTime(), 610));
-			ridesToBeAdded.add(new Ride("ROM", "VIE", new GregorianCalendar(2015, 6, 3, 8, 42).getTime(), 620));
+			ridesToBeAdded.add(new Ride("ROM", "VIE", new GregorianCalendar(2015, 6, 2, 8, 42).getTime(), 620));
 			ridesToBeAdded.add(new Ride("VIE", "ROM", new GregorianCalendar(2015, 6, 2, 17, 13).getTime(), 630));
 			ridesToBeAdded.add(new Ride("VIE", "ROM", new GregorianCalendar(2015, 6, 2, 17, 12).getTime(), 640));
 
 			for(Ride ride:ridesToBeAdded) {
 				List<Seat> seats = new ArrayList<Seat>();
-				System.out.println("FIRST FOR");
+				
 				seats.add(new Seat(Category.FIRST, randomizePrice(new BigDecimal(ride.getDuration()*10)), true));
-				seats.add(new Seat(Category.FIRST, randomizePrice(new BigDecimal(ride.getDuration()*6)), true));
+				seats.add(new Seat(Category.ECONOMY, randomizePrice(new BigDecimal(ride.getDuration()*6)), true));
 
 				rides.put(ride,seats);
 			}

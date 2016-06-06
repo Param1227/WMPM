@@ -57,7 +57,7 @@ public class Train1Respository {
 				List<Seat> seats = new ArrayList<Seat>();
 
 				seats.add(new Seat(Category.FIRST, randomizePrice(new BigDecimal(ride.getDuration()*10)), true));
-				seats.add(new Seat(Category.FIRST, randomizePrice(new BigDecimal(ride.getDuration()*6)), true));
+				seats.add(new Seat(Category.ECONOMY, randomizePrice(new BigDecimal(ride.getDuration()*6)), true));
 
 				rides.put(ride,seats);
 			}

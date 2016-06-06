@@ -25,6 +25,9 @@
         <bean id="prepareTrain1Offers" class="at.ac.wmpm.booking.processor.PrepareTrain1Offers" />
         <bean id="prepareTrain2Offers" class="at.ac.wmpm.booking.processor.PrepareTrain2Offers" />
         <bean id="preparePathRequestProcessor" class="at.ac.wmpm.booking.processor.PreparePathRequestProcessor" />
+        <bean id="mapOffers" class="at.ac.wmpm.booking.processor.MapOffers" />
+        
+
      	
 		<!-- ROUTES -->
 		<bean id="appRoute" class="at.ac.wmpm.booking.route.AppRouteBuilder" />
@@ -64,7 +67,7 @@
 		<!-- get offers form train1 + sort route -->
 		<route id="rest-forward-request" streamCache="true">
 			<from uri="direct:forward" />			
-			<!-- <process ref="sortOffers" />  -->
+			<process ref="mapOffers" />  
 			 <choice>
 				<when>
 					<simple>${body} == null</simple>
