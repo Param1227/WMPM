@@ -24,7 +24,7 @@ public class AppRouteBuilder extends RouteBuilder{
 		.to("direct:processInput");
 
 		// Booking
-		rest("/book").description("Book a offer")
+		rest("/booking").description("Book an offer")
 		.consumes("application/json").produces("application/json")
 
 		.post("/").description("Book an offer").type(Booking.class)

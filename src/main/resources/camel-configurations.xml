@@ -26,7 +26,7 @@
         <bean id="prepareTrain2Offers" class="at.ac.wmpm.booking.processor.PrepareTrain2Offers" />
         <bean id="preparePathRequestProcessor" class="at.ac.wmpm.booking.processor.PreparePathRequestProcessor" />
         <bean id="mapOffers" class="at.ac.wmpm.booking.processor.MapOffers" />
-        
+        <bean id="prepareBooking" class="at.ac.wmpm.booking.processor.PrepareBooking" />
 
      	
 		<!-- ROUTES -->
@@ -87,7 +87,6 @@
 			<marshal ref="xmljson" />
 			<process ref="prepareTrain1Offers" />
 			<marshal ref="pojo2json" />
-			
 		</route>
 		
 		<route streamCache="true">
@@ -96,9 +95,56 @@
 			<to uri="http://localhost:8083/request/" />
 			<log message="Response from Airline 2: ${body}" />
 			<process ref="prepareTrain2Offers" />
-			<marshal ref="pojo2json" />
-			
-</route>
+			<marshal ref="pojo2json" />	
+		</route>
+		
+		<route streamCache="true">
+			<from uri="direct:processBooking"></from>
+			<process ref="prepareBooking" />
+			<choice>
+				<when>
+					<simple>${headers.train} == 'Train 1'</simple>
+					<to uri="direct:bookTrain1"/>
+				</when>
+				<otherwise>
+					<to uri="direct:bookTrain2"/> 
+				</otherwise>
+			</choice> 	
+		</route>
+		
+		<route streamCache="true">
+			<from uri="direct:bookTrain1" />
+			<removeHeaders pattern="CamelHttp*" />
+			<setHeader headerName="CamelHttpPath">
+				<simple>${headers.bookingId}</simple>
+			</setHeader>
+			<setHeader headerName="CamelHttpMethod">
+				<constant>GET</constant>
+			</setHeader>
+			<setBody>
+				<constant>null</constant>
+			</setBody>
+			<!-- <to uri="http://localhost:8081/booking/" />  -->
+			<!-- <to uri="direct:ticketroute" />  -->
+		</route>
+
+
+		<route streamCache="true">
+			<from uri="direct:bookTrain2" />
+			<removeHeaders pattern="CamelHttp*" />
+			<setHeader headerName="CamelHttpPath">
+				<simple>${headers.bookingId}</simple>
+			</setHeader>
+			<setHeader headerName="CamelHttpMethod">
+				<constant>GET</constant>
+			</setHeader>
+			<setBody>
+				<constant>null</constant>
+			</setBody>
+		<!-- 	<to uri="http://localhost:8083/book/" />  -->
+			<!-- <to uri="direct:ticketroute" />  -->
+		</route>
+		
 		
 	</camelContext>	 
 </beans>

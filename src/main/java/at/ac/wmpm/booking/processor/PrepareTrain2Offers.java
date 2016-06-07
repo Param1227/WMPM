@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import at.ac.wmpm.booking.helper.TrainMapper;
 import at.ac.wmpm.booking.model.Offer;
 
 public class PrepareTrain2Offers implements Processor{
@@ -30,7 +31,9 @@ public class PrepareTrain2Offers implements Processor{
 			for (Offer o : offers) {
 				//TicketMapper.registerOffer(o, "Airline1");
 				LOG.debug("Offer: " + o.getFrom());
-				o.setTrain("db");
+				
+				TrainMapper.registerOffer(o, "Train 2");
+				o.setTrain("Train 2");
 				result.add(o);
 			}
 			
