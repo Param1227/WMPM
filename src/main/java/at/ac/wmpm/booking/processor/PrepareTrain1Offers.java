@@ -8,6 +8,7 @@ import org.apache.camel.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.wmpm.booking.helper.TrainMapper;
 import at.ac.wmpm.booking.model.Offer;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -33,7 +34,9 @@ public class PrepareTrain1Offers implements Processor{
 			for (Offer o : offers) {
 				//TicketMapper.registerOffer(o, "Airline1");
 				LOG.debug("Offer: " + o.getFrom());
-				o.setTrain("oebb");
+				
+				TrainMapper.registerOffer(o, "Train1");
+				o.setTrain("Train1");
 				result.add(o);
 			}
 			System.out.println("resultArry = "+result.get(0).toString());

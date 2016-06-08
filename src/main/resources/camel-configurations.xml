@@ -35,18 +35,22 @@
 		<bean id="getTrainsRoute" class="at.ac.wmpm.booking.route.GetTrainsRouteBuilder"/>
 		<bean id="prepareResponse" class="at.ac.wmpm.booking.route.PrepareResponseRouteBuilder"/>
 		
+		
 	<!-- <bean id="prepResponseRoute" class="at.ac.wmpm.booking.route.PrepareResponseRouteBuilder"/> -->
 		
 		<!-- TRAIN1 ROUTES -->
 		<bean id="train1Offers" class="at.ac.wmpm.train1.route.Train1OfferRouteBuilder" />
+		<bean id="train1Booking" class="at.ac.wmpm.train1.route.BookingRouteBuilder" />
 		
 		<!-- TRAIN2 ROUTES -->
 		<bean id="train2Offers" class="at.ac.wmpm.train2.route.Train2OfferRouteBuilder" />
+		<bean id="train2Booking" class="at.ac.wmpm.train2.route.BookingRouteBuilder" />
 		
 		<!-- SERVICES -->
 		<bean id="train1Service" class="at.ac.wmpm.train1.service.TrainService" />
 		<bean id="train2Service" class="at.ac.wmpm.train2.service.TrainService" />
-		
+
+
 			
 		<camelContext id="myConfig" xmlns="http://camel.apache.org/schema/spring">
 			<routeBuilder ref="appRoute" />
@@ -56,12 +60,15 @@
 			<routeBuilder ref="prepareResponse" /> 
 			<routeBuilder ref="getTrainsRoute" /> 
 			<routeBuilder ref="train1Offers" /> 
-			<routeBuilder ref="train2Offers" /> 
+			<routeBuilder ref="train2Offers" />
+			<routeBuilder ref="train1Booking" />
+			<routeBuilder ref="train2Booking" /> 
 			
 		
 		<dataFormats>
 			<json id="pojo2json" library="Jackson" disableFeatures="FAIL_ON_EMPTY_BEANS" />
 			<xmljson id="xmljson" />
+			
 		</dataFormats>
 		
 		<!-- get offers form train1 + sort route -->
@@ -93,7 +100,7 @@
 			<from uri="direct:getTrain2" />
 			<log message="Ich komme in die Camel Config 2" />
 			<to uri="http://localhost:8083/request/" />
-			<log message="Response from Airline 2: ${body}" />
+			<log message="Response from Train 2: ${body}" />
 			<process ref="prepareTrain2Offers" />
 			<marshal ref="pojo2json" />	
 		</route>
@@ -103,7 +110,7 @@
 			<process ref="prepareBooking" />
 			<choice>
 				<when>
-					<simple>${headers.train} == 'Train 1'</simple>
+					<simple>${headers.train} == 'Train1'</simple>
 					<to uri="direct:bookTrain1"/>
 				</when>
 				<otherwise>
@@ -118,13 +125,17 @@
 			<setHeader headerName="CamelHttpPath">
 				<simple>${headers.bookingId}</simple>
 			</setHeader>
+			<log message="Check header3: ${headers.offerId}" />
+			<log message="Check header2: ${headers.bookingId}" />
+			<log message="Check header: ${headers}" />
 			<setHeader headerName="CamelHttpMethod">
 				<constant>GET</constant>
 			</setHeader>
 			<setBody>
 				<constant>null</constant>
 			</setBody>
-			<!-- <to uri="http://localhost:8081/booking/" />  -->
+			<log message="Response from Train 1x: ${headers.bookingId}" />
+			<to uri="http://localhost:8081/booking/" />
 			<!-- <to uri="direct:ticketroute" />  -->
 		</route>
 
@@ -141,7 +152,7 @@
 			<setBody>
 				<constant>null</constant>
 			</setBody>
-		<!-- 	<to uri="http://localhost:8083/book/" />  -->
+		 	<to uri="http://localhost:8083/book/" />  
 			<!-- <to uri="direct:ticketroute" />  -->
 		</route>
 		

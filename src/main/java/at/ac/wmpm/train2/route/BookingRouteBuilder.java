@@ -7,12 +7,13 @@ public class BookingRouteBuilder extends RouteBuilder{
 	@Override
 	public void configure() throws Exception {
 		// TODO Auto-generated method stub
+		
 		from("restlet:http://localhost:8083/book/{offerId}")
 		.removeHeaders("CamelHttp*")
 		.log("Hier 1")
-		.to("")
+//		.to("xy")
 		.marshal("pojo2json")
-		.unmarshal("xml2json");
+		.unmarshal("xmljson");
 		
 	}
 
