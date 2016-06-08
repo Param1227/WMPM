@@ -27,6 +27,8 @@
         <bean id="preparePathRequestProcessor" class="at.ac.wmpm.booking.processor.PreparePathRequestProcessor" />
         <bean id="mapOffers" class="at.ac.wmpm.booking.processor.MapOffers" />
         <bean id="prepareBooking" class="at.ac.wmpm.booking.processor.PrepareBooking" />
+        <bean id="bookingError" class="at.ac.wmpm.booking.processor.BookingError" />
+        <bean id="ticketProcessing" class="at.ac.wmpm.booking.processor.TicketProcessing" />
 
      	
 		<!-- ROUTES -->
@@ -142,9 +144,7 @@
 			<log message="Response from Train 1x: ${headers.bookingId}" />
 			<to uri="http://localhost:8081/booking/" />
 			<log message="Response - Booking from Train 1: ${body}" />
-			<marshal ref="xmljson" />
-			<unmarshal ref="trainticketJson" />
-			<!-- <to uri="direct:ticketroute" />  -->
+			<to uri="direct:taproute" />
 		</route>
 
 
@@ -161,9 +161,40 @@
 				<constant>null</constant>
 			</setBody>
 		 	<to uri="http://localhost:8083/book/" />  
-		 	<marshal ref="xmljson" />
+			<to uri="direct:taproute" />
+		</route>
+		
+		<route streamCache="true">
+			<from uri="direct:taproute" />
+			<marshal ref="xmljson" />
 			<unmarshal ref="trainticketJson" />
-			<!-- <to uri="direct:ticketroute" />  -->
+			<choice>
+				<when>
+					<simple>${body} == null</simple>
+					<process ref="bookingError" />
+				</when>
+				<otherwise>
+					<wireTap uri="direct:tap">
+						<!-- create the new tap message body and headers -->
+						<body>
+							<simple>${body.getPrice()}</simple>
+						</body>
+						<setHeader headerName="ticketID">
+							<constant>${headers.Offerid}</constant>
+						</setHeader>
+						<setHeader headerName="date">
+							<simple>${date:now:yyyyMMdd}</simple>
+						</setHeader>
+					</wireTap>
+					<process ref="ticketProcessing" />
+				</otherwise>
+			</choice>
+		</route>
+		
+		<route id="booked-trains">
+			<from uri="direct:tap" />
+			<to uri="file://target/provision/?fileName=pupu.txt" />
+			
 		</route>
 		
 		
