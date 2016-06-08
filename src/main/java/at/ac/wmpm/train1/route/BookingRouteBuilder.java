@@ -17,7 +17,7 @@ public class BookingRouteBuilder extends RouteBuilder{
 		
 		from("restlet:http://localhost:8081/booking/{offerId}")
 		.removeHeaders("CamelHttp*")
-//		.to("xy")
+		.to("bean:train1Service?method=bookTicket(${header.offerId})")
 		.marshal("pojo2json")
 		.unmarshal("xmljson");
 		

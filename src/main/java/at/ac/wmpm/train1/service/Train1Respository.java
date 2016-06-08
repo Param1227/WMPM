@@ -17,12 +17,15 @@ import at.ac.wmpm.booking.model.Ride;
 import at.ac.wmpm.booking.model.Offer;
 import at.ac.wmpm.booking.model.Ride;
 import at.ac.wmpm.booking.model.Seat;
+import at.ac.wmpm.booking.model.TrainTicket;
 
 public class Train1Respository {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Train1Respository.class);
 
 	private static HashMap<Ride, List<Seat>> rides;
+	private static HashMap<UUID, UUID> offer2ride;
+	private static HashMap<UUID, UUID> offer2seat;
 
 	public Train1Respository() {
 	}
@@ -31,6 +34,8 @@ public class Train1Respository {
 
 		if(rides == null) {
 			rides = new HashMap<Ride, List<Seat>>();
+			offer2seat = new HashMap<UUID, UUID>();
+			offer2ride = new HashMap<UUID, UUID>();
 
 			System.out.println("Ich komme in Train1Repository");
 			List<Ride> ridesToBeAdded = new ArrayList<Ride>();
@@ -98,12 +103,69 @@ public class Train1Respository {
 
 						offer.setId(UUID.randomUUID());
 						offers.add(offer);	
+						
+						offer2seat.put(offer.getId(), seat.getId());
+						offer2ride.put(offer.getId(), ride.getId());
 					}
 				}
 			}
 		}
 
 		return offers;
+	}
+	
+	public static TrainTicket bookTicket(UUID offerId) {
+
+		initialize();
+		
+		if(offer2seat.isEmpty() || offer2ride.isEmpty()) {
+			return null;
+		}
+
+		UUID seatId = offer2seat.get(offerId);
+		UUID rideId = offer2ride.get(offerId);
+		
+		if(seatId == null || rideId == null) {
+			return null;
+		}
+		
+		Ride ride = null;
+		
+		for(Ride r : rides.keySet()) {
+			if(r.getId().equals(rideId)) {
+				ride = r;
+				break;
+			}
+		}
+		
+		Seat seat = null;
+		
+		for(Seat s : rides.get(ride)) {
+			if(s.getId().equals(seatId)) {
+				seat = s;
+				break;
+			}
+		}
+		
+
+		if(seat.isBooked()) {
+			LOG.info("is booked");
+			return null;
+		}
+		
+		rides.get(ride).remove(seat);
+		seat.setBooked(true);
+		rides.get(ride).add(seat);
+		
+		TrainTicket ticket = new TrainTicket();
+		ticket.setId(offerId);
+		ticket.setDate(ride.getDate());
+		ticket.setFrom(ride.getFrom());
+		ticket.setTo(ride.getTo());
+		ticket.setCategory(seat.getCategory());
+		ticket.setPrice(seat.getPrice());
+		
+		return ticket;
 	}
 	public static Offer convertRideToOffer(Ride ride, Seat seat) {
 

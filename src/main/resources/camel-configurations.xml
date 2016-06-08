@@ -67,6 +67,11 @@
 		
 		<dataFormats>
 			<json id="pojo2json" library="Jackson" disableFeatures="FAIL_ON_EMPTY_BEANS" />
+			<json id="trainticketJson" library="Jackson"
+				unmarshalTypeName="at.ac.wmpm.booking.model.TrainTicket"
+				disableFeatures="FAIL_ON_EMPTY_BEANS" />
+			<json id="bookingJson" library="Jackson"
+				unmarshalTypeName="at.ac.wmpm.booking.model.Booking" />
 			<xmljson id="xmljson" />
 			
 		</dataFormats>
@@ -136,6 +141,9 @@
 			</setBody>
 			<log message="Response from Train 1x: ${headers.bookingId}" />
 			<to uri="http://localhost:8081/booking/" />
+			<log message="Response - Booking from Train 1: ${body}" />
+			<marshal ref="xmljson" />
+			<unmarshal ref="trainticketJson" />
 			<!-- <to uri="direct:ticketroute" />  -->
 		</route>
 
@@ -153,6 +161,8 @@
 				<constant>null</constant>
 			</setBody>
 		 	<to uri="http://localhost:8083/book/" />  
+		 	<marshal ref="xmljson" />
+			<unmarshal ref="trainticketJson" />
 			<!-- <to uri="direct:ticketroute" />  -->
 		</route>
 		
