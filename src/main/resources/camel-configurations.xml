@@ -114,7 +114,9 @@
 		
 		<route streamCache="true">
 			<from uri="direct:processBooking"></from>
+			<log message="is the body null?4: ${body}"/>
 			<process ref="prepareBooking" />
+			<log message="is the body null?3: ${body}"/>
 			<choice>
 				<when>
 					<simple>${headers.train} == 'Train1'</simple>
@@ -128,6 +130,7 @@
 		
 		<route streamCache="true">
 			<from uri="direct:bookTrain1" />
+			<log message="is the body null?2: ${body}"/>
 			<removeHeaders pattern="CamelHttp*" />
 			<setHeader headerName="CamelHttpPath">
 				<simple>${headers.bookingId}</simple>
@@ -141,15 +144,15 @@
 			<setBody>
 				<constant>null</constant>
 			</setBody>
-			<log message="Response from Train 1x: ${headers.bookingId}" />
 			<to uri="http://localhost:8081/booking/" />
-			<log message="Response - Booking from Train 1: ${body}" />
+			<log message="is the body null?1: ${body}"/>
 			<to uri="direct:taproute" />
 		</route>
 
 
 		<route streamCache="true">
 			<from uri="direct:bookTrain2" />
+			<log message="is the body null?2: ${body}"/>
 			<removeHeaders pattern="CamelHttp*" />
 			<setHeader headerName="CamelHttpPath">
 				<simple>${headers.bookingId}</simple>
@@ -161,11 +164,13 @@
 				<constant>null</constant>
 			</setBody>
 		 	<to uri="http://localhost:8083/book/" />  
+		 	<log message="is the body null?1: ${body}"/>
 			<to uri="direct:taproute" />
 		</route>
 		
 		<route streamCache="true">
 			<from uri="direct:taproute" />
+			<log message="is the body null?: ${body}"/>
 			<marshal ref="xmljson" />
 			<unmarshal ref="trainticketJson" />
 			<choice>
@@ -193,10 +198,9 @@
 		
 		<route id="booked-trains">
 			<from uri="direct:tap" />
-			<to uri="file://target/provision/?fileName=pupu.txt" />
-			
+			<convertBodyTo type="java.lang.String" />
+			<to uri="file://target/provision/?fileName=${header.date}.txt" />
 		</route>
-		
 		
 	</camelContext>	 
 </beans>
