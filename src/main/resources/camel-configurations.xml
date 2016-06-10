@@ -203,7 +203,6 @@
 		
 		<route id="booked-trains">
 			<from uri="direct:tap" />
-			<!--   <to uri="file://target/provision/?fileName=pupu.txt" /> -->
 			<to uri="direct:twitterTicket" />
 			<convertBodyTo type="java.lang.String" />
 			<to uri="file://target/provision/?fileName=${header.date}.txt" />
