@@ -5,6 +5,8 @@ import org.apache.camel.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.wmpm.booking.helper.CustomerDirectory;
+import at.ac.wmpm.booking.model.Customer;
 import at.ac.wmpm.booking.model.TrainTicket;
 import at.ac.wmpm.booking.model.Ticket;
 
@@ -19,6 +21,7 @@ public class TicketProcessing implements Processor {
 		LOG.info("ticket:" + exchange);
 		LOG.info("ticket:" + t);
 		try {
+			Customer customer = CustomerDirectory.getCustomer(t.getId());
 
 			Ticket result = new Ticket();
 			result.setId(t.getId().toString());
@@ -26,8 +29,8 @@ public class TicketProcessing implements Processor {
 			result.setFrom(t.getFrom());
 			result.setTo(t.getTo());
 			result.setCategory(t.getCategory());
-			result.setName("Test");
-			result.setEmail("test.test@gmail.com");
+			result.setName(customer.getName());
+			result.setEmail(customer.getEmail());
 
 			exchange.getOut().setBody(result);
 		} catch (Exception e) {

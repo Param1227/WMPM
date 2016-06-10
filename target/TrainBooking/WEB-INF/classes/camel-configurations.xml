@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://camel.apache.org/schema/cxf"
+	xmlns:broker="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="
+         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd
+         http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+         http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+         
+      	<bean id="mongoURI" class="com.mongodb.MongoURI">
+			<constructor-arg index="0" value="mongodb://test:test@ds025180.mlab.com:25180/trainbooking" />
+
+
+		</bean>
+		
+		<bean id="mongoDB" class="com.mongodb.Mongo">
+			<constructor-arg index="0" ref="mongoURI" />
+		</bean>
+        
+        <!-- BEANS -->
+        <bean id="missinginputError" class="at.ac.wmpm.booking.processor.MissingInputError" />
+        <bean id="requestError" class="at.ac.wmpm.booking.processor.RequestNotFoundError" />
+        <bean id="prepareTrain1Offers" class="at.ac.wmpm.booking.processor.PrepareTrain1Offers" />
+        <bean id="prepareTrain2Offers" class="at.ac.wmpm.booking.processor.PrepareTrain2Offers" />
+        <bean id="preparePathRequestProcessor" class="at.ac.wmpm.booking.processor.PreparePathRequestProcessor" />
+        <bean id="mapOffers" class="at.ac.wmpm.booking.processor.MapOffers" />
+        <bean id="prepareBooking" class="at.ac.wmpm.booking.processor.PrepareBooking" />
+        <bean id="bookingError" class="at.ac.wmpm.booking.processor.BookingError" />
+        <bean id="ticketProcessing" class="at.ac.wmpm.booking.processor.TicketProcessing" />
+        <bean id="twitterPost" class="at.ac.wmpm.booking.processor.TwitterPost" />
+	
+
+     	
+		<!-- ROUTES -->
+		<bean id="appRoute" class="at.ac.wmpm.booking.route.AppRouteBuilder" />
+		<bean id="offerRoute" class="at.ac.wmpm.booking.route.OfferRouteBuilder"/>
+		<bean id="getTrainsRoute" class="at.ac.wmpm.booking.route.GetTrainsRouteBuilder"/>
+		<bean id="prepareResponse" class="at.ac.wmpm.booking.route.PrepareResponseRouteBuilder"/>
+		<bean id="ticketRoutes" class="at.ac.wmpm.booking.route.TicketRouteBuilder" />
+	
+		
+		
+	<!-- <bean id="prepResponseRoute" class="at.ac.wmpm.booking.route.PrepareResponseRouteBuilder"/> -->
+		
+		<!-- TRAIN1 ROUTES -->
+		<bean id="train1Offers" class="at.ac.wmpm.train1.route.Train1OfferRouteBuilder" />
+		<bean id="train1Booking" class="at.ac.wmpm.train1.route.BookingRouteBuilder" />
+		
+		<!-- TRAIN2 ROUTES -->
+		<bean id="train2Offers" class="at.ac.wmpm.train2.route.Train2OfferRouteBuilder" />
+		<bean id="train2Booking" class="at.ac.wmpm.train2.route.BookingRouteBuilder" />
+		
+		<!-- SERVICES -->
+		<bean id="train1Service" class="at.ac.wmpm.train1.service.TrainService" />
+		<bean id="train2Service" class="at.ac.wmpm.train2.service.TrainService" />
+
+
+			
+		<camelContext id="myConfig" xmlns="http://camel.apache.org/schema/spring">
+			<routeBuilder ref="appRoute" />
+			<routeBuilder ref="offerRoute" />
+			<routeBuilder ref="train1Offers" />
+			<routeBuilder ref="train2Offers" /> 
+			<routeBuilder ref="prepareResponse" /> 
+			<routeBuilder ref="getTrainsRoute" /> 
+			<routeBuilder ref="train1Offers" /> 
+			<routeBuilder ref="train2Offers" />
+			<routeBuilder ref="train1Booking" />
+			<routeBuilder ref="train2Booking" /> 
+			<routeBuilder ref="ticketRoutes" /> 
+			
+		
+		<dataFormats>
+			<json id="pojo2json" library="Jackson" disableFeatures="FAIL_ON_EMPTY_BEANS" />
+			<json id="trainticketJson" library="Jackson"
+				unmarshalTypeName="at.ac.wmpm.booking.model.TrainTicket"
+				disableFeatures="FAIL_ON_EMPTY_BEANS" />
+			<json id="bookingJson" library="Jackson"
+				unmarshalTypeName="at.ac.wmpm.booking.model.Booking" />
+			<xmljson id="xmljson" />
+			
+		</dataFormats>
+		
+		<!-- get offers form train1 + sort route -->
+		<route id="rest-forward-request" streamCache="true">
+			<from uri="direct:forward" />			
+			<process ref="mapOffers" />  
+			 <choice>
+				<when>
+					<simple>${body} == null</simple>
+					<process ref="requestError" />  
+				</when>
+				<otherwise>
+				<!-- 	<enrich uri="direct:addWeather" strategyRef="aggregationBean" />  --> 
+				</otherwise>
+			</choice> 	
+		</route>
+		
+		<route streamCache="true">
+			<from uri="direct:getTrain1" />
+			<log message="Ich komme in die Camel Config" />
+			<to uri="http://localhost:8081/req/" />
+			<log message="Response from Train 1: ${body}" />
+			<marshal ref="xmljson" />
+			<process ref="prepareTrain1Offers" />
+			<marshal ref="pojo2json" />
+		</route>
+		
+		<route streamCache="true">
+			<from uri="direct:getTrain2" />
+			<log message="Ich komme in die Camel Config 2" />
+			<to uri="http://localhost:8083/request/" />
+			<log message="Response from Train 2: ${body}" />
+			<process ref="prepareTrain2Offers" />
+			<marshal ref="pojo2json" />	
+		</route>
+		
+		<route streamCache="true">
+			<from uri="direct:processBooking"></from>
+			<process ref="prepareBooking" />
+			<choice>
+				<when>
+					<simple>${headers.train} == 'Train1'</simple>
+					<to uri="direct:bookTrain1"/>
+				</when>
+				<otherwise>
+					<to uri="direct:bookTrain2"/> 
+				</otherwise>
+			</choice> 	
+		</route>
+		
+		<route streamCache="true">
+			<from uri="direct:bookTrain1" />
+			<removeHeaders pattern="CamelHttp*" />
+			<setHeader headerName="CamelHttpPath">
+				<simple>${headers.bookingId}</simple>
+			</setHeader>
+			<log message="Check header3: ${headers.offerId}" />
+			<log message="Check header2: ${headers.bookingId}" />
+			<log message="Check header: ${headers}" />
+			<setHeader headerName="CamelHttpMethod">
+				<constant>GET</constant>
+			</setHeader>
+			<setBody>
+				<constant>null</constant>
+			</setBody>
+			<log message="Response from Train 1x: ${headers.bookingId}" />
+			<to uri="http://localhost:8081/booking/" />
+			<log message="Response - Booking from Train 1: ${body}" />
+			<to uri="direct:taproute" />
+		</route>
+
+
+		<route streamCache="true">
+			<from uri="direct:bookTrain2" />
+			<removeHeaders pattern="CamelHttp*" />
+			<setHeader headerName="CamelHttpPath">
+				<simple>${headers.bookingId}</simple>
+			</setHeader>
+			<setHeader headerName="CamelHttpMethod">
+				<constant>GET</constant>
+			</setHeader>
+			<setBody>
+				<constant>null</constant>
+			</setBody>
+		 	<to uri="http://localhost:8083/book/" />  
+			<to uri="direct:taproute" />
+		</route>
+		
+		<route streamCache="true">
+			<from uri="direct:taproute" />
+			<marshal ref="xmljson" />
+			<unmarshal ref="trainticketJson" />
+			<choice>
+				<when>
+					<simple>${body} == null</simple>
+					<process ref="bookingError" />
+				</when>
+				<otherwise>
+					<wireTap uri="direct:tap">
+						<!-- create the new tap message body and headers -->
+						<body>
+							<simple>${body.getPrice()}</simple>
+						</body>
+						<setHeader headerName="ticketID">
+							<constant>${headers.Offerid}</constant>
+						</setHeader>
+						<setHeader headerName="date">
+							<simple>${date:now:yyyyMMdd}</simple>
+						</setHeader>
+					</wireTap>
+					<process ref="ticketProcessing" />
+				</otherwise>
+			</choice>
+		</route>
+		
+		<route id="booked-trains">
+			<from uri="direct:tap" />
+			<!--   <to uri="file://target/provision/?fileName=pupu.txt" /> -->
+			<to uri="direct:twitterTicket" />
+		</route>
+		
+		
+	</camelContext>	 
+</beans>

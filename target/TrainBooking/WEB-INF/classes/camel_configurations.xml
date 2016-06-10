@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cxf="http://camel.apache.org/schema/cxf"
+	xmlns:broker="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="
+         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd
+         http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+         http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+         
+      	<bean id="mongoURI" class="com.mongodb.MongoURI">
+			<constructor-arg index="0" value="mongodb://trainbooking:workflow@ds027017.mlab.com:27017/booking" />
+		</bean>
+		
+		<bean id="mongoDB" class="com.mongodb.Mongo">
+			<constructor-arg index="0" ref="mongoURI" />
+		</bean>
+        
+        
+        <-- BEANS -->
+        <bean id="testBean" class="com.javacodegeeks.camel.TestBean"/>   
+		</bean>
+		
+		<-- ROUTES -->
+		<bean id="appRoutes" class="at.ac.wmpm.booking.route.AppRouteBuilder" />
+		<bean id="testRoute" class="at.ac.wmpm.booking.route.TestRouteBuilder"/>
+		
+		<!-- JMS -->
+		<broker:broker persistent="false" brokerName="myBroker">
+			<broker:transportConnectors>
+				<!-- expose a VM transport for in-JVM transport between AMQ and Camel 
+					on the server side -->
+				<broker:transportConnector name="vm"
+					uri="vm://myBroker" />
+				<!-- expose a TCP transport for clients to use -->
+				<broker:transportConnector name="tcp"
+					uri="tcp://localhost:61610" />
+			</broker:transportConnectors>
+		</broker:broker>
+		<bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
+			<property name="brokerURL" value="vm://myBroker" />
+		</bean>
+		
+		
+		<camelContext id="myConfig" xmlns="http://camel.apache.org/schema/spring">
+			<routeBuilder ref="appRoutes" />
+			<routeBuilder ref="testRoute" />   
+		
+		<dataFormats>
+			<json id="pojo2json" library="Jackson" disableFeatures="FAIL_ON_EMPTY_BEANS" />
+			<json id="requestJson" library="Jackson"
+				unmarshalTypeName="at.ac.wmpm.booking.model.Request"
+				disableFeatures="FAIL_ON_EMPTY_BEANS" />
+			<json id="airlineticketJson" library="Jackson"
+				unmarshalTypeName="at.ac.wmpm.booking.model.AirlineTicket"
+				disableFeatures="FAIL_ON_EMPTY_BEANS" />
+			<json id="bookingJson" library="Jackson"
+				unmarshalTypeName="at.ac.wmpm.booking.model.Booking" />
+			<xmljson id="xmljson" />
+		</dataFormats>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		</camelContext>
+			 
+</beans>
