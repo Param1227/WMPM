@@ -29,6 +29,8 @@
         <bean id="prepareBooking" class="at.ac.wmpm.booking.processor.PrepareBooking" />
         <bean id="bookingError" class="at.ac.wmpm.booking.processor.BookingError" />
         <bean id="ticketProcessing" class="at.ac.wmpm.booking.processor.TicketProcessing" />
+        <bean id="twitterPost" class="at.ac.wmpm.booking.processor.TwitterPost" />
+	
 
      	
 		<!-- ROUTES -->
@@ -36,6 +38,8 @@
 		<bean id="offerRoute" class="at.ac.wmpm.booking.route.OfferRouteBuilder"/>
 		<bean id="getTrainsRoute" class="at.ac.wmpm.booking.route.GetTrainsRouteBuilder"/>
 		<bean id="prepareResponse" class="at.ac.wmpm.booking.route.PrepareResponseRouteBuilder"/>
+		<bean id="ticketRoutes" class="at.ac.wmpm.booking.route.TicketRouteBuilder" />
+	
 		
 		
 	<!-- <bean id="prepResponseRoute" class="at.ac.wmpm.booking.route.PrepareResponseRouteBuilder"/> -->
@@ -65,6 +69,7 @@
 			<routeBuilder ref="train2Offers" />
 			<routeBuilder ref="train1Booking" />
 			<routeBuilder ref="train2Booking" /> 
+			<routeBuilder ref="ticketRoutes" /> 
 			
 		
 		<dataFormats>
@@ -193,8 +198,8 @@
 		
 		<route id="booked-trains">
 			<from uri="direct:tap" />
-			<to uri="file://target/provision/?fileName=pupu.txt" />
-			
+			<!--   <to uri="file://target/provision/?fileName=pupu.txt" /> -->
+			<to uri="direct:twitterTicket" />
 		</route>
 		
 		
