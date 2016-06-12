@@ -19,18 +19,18 @@ public class TwitterPost  implements Processor{
 		
 		Ticket ticket = exchange.getIn().getBody(Ticket.class);
 		
-		log.debug("TicketDate:");
+		log.debug("TicketDate:"+ ticket.getDate());
 
 		//generate unigue datetime
 		Date d = new Date();
 		String unitime = ""+d.getTime();
 		
 		
-		//String str = ticket.getName() + " has booked a Trainticket from " + ticket.getFrom() +
-		//" to " + ticket.getTo() + ". #time"+unitime;
+		String str = ticket.getName() + " has booked a "+ticket.getCategory()+"-Class Trainticket from " + ticket.getFrom() +
+		" to " + ticket.getTo() + " on "+ticket.getDate();
 		
-		String str = "TestPerson has booked a Trainticket from VIE TO BLA . #time"+unitime;
-				
+//		String str = ticket.getName() +  has booked a Trainticket from VIE TO BLA . #time"+unitime+ticket.getDate();
+//				
 		exchange.getOut().setBody(str);
 	}
 

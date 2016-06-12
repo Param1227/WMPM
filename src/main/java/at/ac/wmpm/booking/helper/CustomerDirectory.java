@@ -7,9 +7,8 @@ import at.ac.wmpm.booking.model.Booking;
 import at.ac.wmpm.booking.model.Customer;
 
 public class CustomerDirectory {
-
 	
-	private static HashMap<UUID, Customer> customers = new HashMap<UUID, Customer>();
+private static HashMap<UUID, Customer> customers = new HashMap<UUID, Customer>();
 	
 	public static void saveCustomer(Booking booking) {
 		// TODO Auto-generated method stub

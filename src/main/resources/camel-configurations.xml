@@ -11,12 +11,25 @@
          
       	<bean id="mongoURI" class="com.mongodb.MongoURI">
 			<constructor-arg index="0" value="mongodb://test:test@ds025180.mlab.com:25180/trainbooking" />
-
-
 		</bean>
 		
 		<bean id="mongoDB" class="com.mongodb.Mongo">
 			<constructor-arg index="0" ref="mongoURI" />
+		</bean>
+
+		<broker:broker persistent="false" brokerName="myBroker">
+			<broker:transportConnectors>
+			
+				<broker:transportConnector name="vm"
+					uri="vm://myBroker" />
+				<!-- expose a TCP transport for clients to use 
+				<broker:transportConnector name="tcp"
+					uri="tcp://localhost:61610" /> -->
+			</broker:transportConnectors>
+		</broker:broker>
+
+		<bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
+			<property name="brokerURL" value="vm://myBroker" />
 		</bean>
         
         <!-- BEANS -->
@@ -197,13 +210,32 @@
 						</setHeader>
 					</wireTap>
 					<process ref="ticketProcessing" />
-				</otherwise>
+					
+            		<to uri="jms:queue:sendOffers"/>
+				</otherwise>	
 			</choice>
 		</route>
+
+		<route>
+			<from uri="jms:queue:sendOffers" />
+			<to uri="direct:multicastTickets" />
+		</route>
+		
+		
+		<route>
+			<from uri="direct:multicastTickets" />
+			<log message="Lukas direct: multicastTickets "/>
+			<multicast>
+				<!-- <to uri="direct:persistTicket" /> -->
+				<!--<to uri="direct:emailTicket" /> -->
+				<to uri="direct:twitterTicket" /> 
+			</multicast>
+		</route>
+		
 		
 		<route id="booked-trains">
 			<from uri="direct:tap" />
-			<to uri="direct:twitterTicket" />
+			<!--  <to uri="direct:twitterTicket" /> -->
 			<convertBodyTo type="java.lang.String" />
 			<to uri="file://target/provision/?fileName=${header.date}.txt" />
 		</route>
