@@ -2,11 +2,11 @@
 <project name="maven-antrun-" default="main"  >
 <target name="main">
   <echo message="Decompress archive"/>
-  <gunzip src="/Users/paramvirparhar/Documents/workspace/Workflow/TrainBooking/target/swagger-ui-2.0.24.tar.gz"/>
-  <untar src="/Users/paramvirparhar/Documents/workspace/Workflow/TrainBooking/target/swagger-ui-2.0.24.tar" dest="/Users/paramvirparhar/Documents/workspace/Workflow/TrainBooking/target"/>
+  <gunzip src="C:\Users\Malinda\git\WMPM\target/swagger-ui-2.1.4.tar.gz"/>
+  <untar src="C:\Users\Malinda\git\WMPM\target/swagger-ui-2.1.4.tar" dest="C:\Users\Malinda\git\WMPM\target"/>
   <echo message="moving resources"/>
   <move todir="target/swagger-ui" overwrite="yes">
-    <fileset dir="/Users/paramvirparhar/Documents/workspace/Workflow/TrainBooking/target/swagger-ui-2.0.24/dist"/>
+    <fileset dir="C:\Users\Malinda\git\WMPM\target/swagger-ui-2.1.4/dist"/>
   </move>
 </target>
 </project>
