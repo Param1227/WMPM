@@ -4,6 +4,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
 
 import at.ac.wmpm.booking.model.Booking;
+import at.ac.wmpm.booking.model.Ticket;
 
 public class AppRouteBuilder extends RouteBuilder{
 
@@ -29,6 +30,11 @@ public class AppRouteBuilder extends RouteBuilder{
 
 		.post("/").description("Book an offer").type(Booking.class)
 		.to("direct:processBooking");
+		
+		// Twitter
+		rest("/twitter").description("Posts ticket to twitter").
+		consumes("application/json").produces("application/json")
+		.post("/").description("Ticket Twitter post").type(Ticket.class).to("direct:twitterTicket");
 
 	}
 

@@ -27,11 +27,17 @@ public class TwitterPost  implements Processor{
 		
 		
 		String str = ticket.getName() + " has booked a "+ticket.getCategory()+"-Class Trainticket from " + ticket.getFrom() +
-		" to " + ticket.getTo() + " on "+ticket.getDate();
+		" to " + ticket.getTo() + " on "+ticket.getDate()+" #time"+unitime;
+	
+		if(str.length() > 140) {
+            exchange.setProperty(Exchange.ROUTE_STOP, Boolean.TRUE);
+            exchange.getOut().setBody("Cannot post on twitter because length of the name oder e-mail adress is to long! (length:"+str.length()+")");
+        } else {
+			log.debug("Twitterlength:" + str.length());
+			exchange.getOut().setBody(str);
+        }
 		
-//		String str = ticket.getName() +  has booked a Trainticket from VIE TO BLA . #time"+unitime+ticket.getDate();
-//				
-		exchange.getOut().setBody(str);
+
 	}
 
 }

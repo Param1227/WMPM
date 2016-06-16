@@ -1,6 +1,7 @@
 package at.ac.wmpm.booking.route;
 
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.twitter.TwitterComponent;
 
 //import at.ac.wmpm.booking.processor.CreateTicketingMail;
 //import at.ac.wmpm.booking.processor.PersistTicket;
@@ -21,7 +22,18 @@ public class TicketRouteBuilder extends RouteBuilder {
 //		from("direct:emailTicket").process(mail).to(AccountProvider.GMAIL_URI);
 		
     	
-		from("direct:twitterTicket").process(twitter).to(TwitterAccount.TWTR_URI);
+	//from("direct:twitterTicket").process(twitter).to(TwitterAccount.TWTR_URI);
+		
+		   TwitterComponent tc = getContext().getComponent("twitter",
+	               TwitterComponent.class);
+	       tc.setAccessToken(TwitterAccount.TWTR_ACCESSTOKEN);
+	       tc.setAccessTokenSecret(TwitterAccount.TWTR_ACCESSTOKENSECRET);
+	       tc.setConsumerKey(TwitterAccount.TWTR_CONSUMERKEY);
+	       tc.setConsumerSecret(TwitterAccount.TWTR_CONSUMERSECRET);
+	       from("direct:twitterTicket").process(twitter).to("twitter://timeline/user");
+		
+	//	from("direct:twitterTicket").process(twitter).to("twitter://timeline/user");
+		
         
     }
 
