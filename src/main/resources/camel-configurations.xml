@@ -211,7 +211,7 @@
 					</wireTap>
 					<process ref="ticketProcessing" />
 					
-            		<!-- <to uri="jms:queue:sendOffers"/> -->	
+            		<!-- <to uri="jms:queue:sendOffers"/> -->
 				</otherwise>	
 			</choice>
 		</route>
@@ -226,7 +226,7 @@
 			<from uri="direct:multicastTickets" />
 			<log message="Lukas direct: multicastTickets "/>
 			<multicast>
-				<!-- <to uri="direct:persistTicket" /> -->
+				<to uri="direct:persistTicket" />
 				<!--<to uri="direct:emailTicket" /> -->
 				<to uri="direct:twitterTicket" /> 
 			</multicast>

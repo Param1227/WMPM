@@ -3,6 +3,7 @@ package at.ac.wmpm.booking.route;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.twitter.TwitterComponent;
 
+import at.ac.wmpm.booking.processor.PersistTicket;
 //import at.ac.wmpm.booking.processor.CreateTicketingMail;
 //import at.ac.wmpm.booking.processor.PersistTicket;
 import at.ac.wmpm.booking.processor.TwitterPost;
@@ -13,12 +14,12 @@ public class TicketRouteBuilder extends RouteBuilder {
     @Override
     public void configure() throws Exception {
     	
-    	//PersistTicket persist = new PersistTicket();
+    	PersistTicket persist = new PersistTicket();
     	TwitterPost twitter = new TwitterPost();
     	//CreateTicketingMail mail = new CreateTicketingMail();
         
-//		from("direct:persistTicket").process(persist)
-//			.to("mongodb:mongoDB?database=booking&collection=tickets&operation=insert");
+		from("direct:persistTicket").process(persist)
+			.to("mongodb:mongoDB?database=trainbooking&collection=tickets&operation=insert");
 //		from("direct:emailTicket").process(mail).to(AccountProvider.GMAIL_URI);
 		
     	
