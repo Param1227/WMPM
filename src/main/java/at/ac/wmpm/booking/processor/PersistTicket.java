@@ -16,7 +16,7 @@ public class PersistTicket implements Processor {
 		
 		Ticket ticket = ex.getIn().getBody(Ticket.class);
 		
-		LOG.info("Lukas Persist"+ticket);
+		LOG.info("Lukas Persist:"+ticket);
 		
 		ex.getOut().setBody(ticket);
 		
