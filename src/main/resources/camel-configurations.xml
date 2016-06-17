@@ -52,6 +52,7 @@
 		<bean id="getTrainsRoute" class="at.ac.wmpm.booking.route.GetTrainsRouteBuilder"/>
 		<bean id="prepareResponse" class="at.ac.wmpm.booking.route.PrepareResponseRouteBuilder"/>
 		<bean id="ticketRoutes" class="at.ac.wmpm.booking.route.TicketRouteBuilder" />
+		<bean id="emailTicket" class="at.ac.wmpm.booking.route.EmailTicketRouteBuilder" />
 	
 		
 		
@@ -82,7 +83,8 @@
 			<routeBuilder ref="train2Offers" />
 			<routeBuilder ref="train1Booking" />
 			<routeBuilder ref="train2Booking" /> 
-			<routeBuilder ref="ticketRoutes" /> 
+			<routeBuilder ref="ticketRoutes" />
+			<routeBuilder ref="emailTicket"/> 
 			
 		
 		<dataFormats>
@@ -227,7 +229,7 @@
 			<log message="Lukas direct: multicastTickets "/>
 			<multicast>
 				<to uri="direct:persistTicket" />
-				<!--<to uri="direct:emailTicket" /> -->
+				<to uri="direct:emailTicket" /> 
 				<to uri="direct:twitterTicket" /> 
 			</multicast>
 		</route>
@@ -235,7 +237,6 @@
 		
 		<route id="booked-trains">
 			<from uri="direct:tap" />
-			<!--  <to uri="direct:twitterTicket" /> -->
 			<convertBodyTo type="java.lang.String" />
 			<to uri="file://target/provision/?fileName=${header.date}.txt" />
 		</route>

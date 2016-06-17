@@ -31,10 +31,16 @@ public class AppRouteBuilder extends RouteBuilder{
 		.post("/").description("Book an offer").type(Booking.class)
 		.to("direct:processBooking");
 		
+		// Email
+		rest("/email").description("Send the booked ticket").
+		consumes("application/json").produces("application/json")
+		.post("/").description("Email booked ticket").type(Ticket.class).to("direct:emailTicket");
+		
 		// Twitter
 		rest("/twitter").description("Posts ticket to twitter").
 		consumes("application/json").produces("application/json")
 		.post("/").description("Ticket Twitter post").type(Ticket.class).to("direct:twitterTicket");
+		
 		
 		
 		//Persist
@@ -44,7 +50,7 @@ public class AppRouteBuilder extends RouteBuilder{
 		.to("direct:persistTicket");
 		
 		//MulticastTicketWrite
-		//eMail, Twitter, Persist into Database
+		//Email, Twitter, Persist into Database
 		rest("/multicastTicket").description("performs multicast")
 		.consumes("application/json").produces("application/json")
 		.post("/").description("Performs multicast: sends mail, posts and persists a ticket").type(Ticket.class)

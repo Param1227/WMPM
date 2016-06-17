@@ -45,6 +45,16 @@ public class Ticket implements Serializable {
         this.date = date;
     }
 
+    public Ticket(String id, String name, String from, String to, String date, String email, Category category) {
+        this.id = id;
+        this.name = name;
+        this.from = from;
+        this.to = to;
+        this.date = date;
+        this.email = email;
+        this.category = category;
+    }
+    
     public Ticket(String id, String name, String from, String to, String date) {
         this.id = id;
         this.name = name;
