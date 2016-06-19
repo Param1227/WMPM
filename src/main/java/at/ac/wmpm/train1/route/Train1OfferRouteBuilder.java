@@ -6,9 +6,8 @@ public class Train1OfferRouteBuilder extends RouteBuilder{
 
 	@Override
 	public void configure() throws Exception {
-		// TODO Auto-generated method stub
 		
-		from("restlet:http://localhost:8081/req/{date}/{from}/{to}")
+		from("restlet:http://localhost:8081/off/{date}/{from}/{to}")
 		.removeHeaders("CamelHttp*")
 		.log("Hier komme ich hin 9")
 		.to("bean:train1Service?method=getRides(${header.date}, ${header.from}, ${header.to})")

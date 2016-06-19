@@ -12,12 +12,12 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.wmpm.booking.model.Category;
-import at.ac.wmpm.booking.model.Offer;
-import at.ac.wmpm.booking.model.Ride;
-import at.ac.wmpm.booking.model.Seat;
-import at.ac.wmpm.booking.model.TrainTicket;
 import at.ac.wmpm.train1.service.Train1Respository;
+import at.ac.wmpm.trainbooking.model.Category;
+import at.ac.wmpm.trainbooking.model.Offer;
+import at.ac.wmpm.trainbooking.model.Ride;
+import at.ac.wmpm.trainbooking.model.Seat;
+import at.ac.wmpm.trainbooking.model.TrainTicket;
 
 public class Train2Respository {
 	private static final Logger LOG = LoggerFactory.getLogger(Train2Respository.class);
@@ -35,49 +35,41 @@ public class Train2Respository {
 
 			List<Ride> ridesToBeAdded = new ArrayList<Ride>();
 
-			ridesToBeAdded.add(new Ride("ROM", "VIE", new GregorianCalendar(2015, 6, 1, 8, 43).getTime(), 610));
-			ridesToBeAdded.add(new Ride("ROM", "VIE", new GregorianCalendar(2015, 6, 2, 8, 42).getTime(), 620));
-			ridesToBeAdded.add(new Ride("VIE", "ROM", new GregorianCalendar(2015, 6, 2, 17, 13).getTime(), 630));
-			ridesToBeAdded.add(new Ride("VIE", "ROM", new GregorianCalendar(2015, 6, 2, 17, 12).getTime(), 640));
+			ridesToBeAdded.add(new Ride("ROM", "VIE", new GregorianCalendar(2016, 7, 1, 8, 43).getTime(), 610));
+			ridesToBeAdded.add(new Ride("ROM", "VIE", new GregorianCalendar(2016, 7, 2, 8, 42).getTime(), 620));
+			ridesToBeAdded.add(new Ride("VIE", "ROM", new GregorianCalendar(2016, 7, 2, 17, 13).getTime(), 630));
+			ridesToBeAdded.add(new Ride("VIE", "ROM", new GregorianCalendar(2016, 7, 2, 17, 12).getTime(), 640));
 
 			for(Ride ride:ridesToBeAdded) {
 				List<Seat> seats = new ArrayList<Seat>();
 				
-				seats.add(new Seat(Category.FIRST, randomizePrice(new BigDecimal(ride.getDuration()*10)), true));
-				seats.add(new Seat(Category.ECONOMY, randomizePrice(new BigDecimal(ride.getDuration()*6)), true));
+				seats.add(new Seat(Category.FIRST, generatePrice(new BigDecimal(ride.getDuration()*10)), true));
+				seats.add(new Seat(Category.ECONOMY, generatePrice(new BigDecimal(ride.getDuration()*6)), true));
 
 				rides.put(ride,seats);
 			}
 		}
 	}
-	
-	private static BigDecimal randomizePrice(BigDecimal price) {
-		BigDecimal min = price.multiply(new BigDecimal(0.9));
-		BigDecimal max = price.multiply(new BigDecimal(1.1));
-		BigDecimal range = max.subtract(min); 
-		return min.add(range.multiply(new BigDecimal(Math.random()))); 
-	}
 
-	public static List<Offer> getOffers(String from, String to, Date date) {
-		// TODO Auto-generated method stub
+	public static List<Offer> getOffers(String f, String t, Date d) {
 		initialize();
 
 		List<Offer> offers = new ArrayList<Offer>();
 
 		for(Ride ride:rides.keySet()) {
 			System.out.println("SECOND FOR");
-			if(ride.getFrom().equals(from) && ride.getTo().equals(to)) {
+			if(ride.getFrom().equals(f) && ride.getTo().equals(t)) {
 
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(date);
+				Calendar c = Calendar.getInstance();
+				c.setTime(d);
+				
+				c.add(Calendar.DATE, 2); 
+				Date plus = c.getTime();
 
-				calendar.add(Calendar.DATE, -1);
-				Date minusOne = calendar.getTime();
+				c.add(Calendar.DATE, -2);
+				Date minus = c.getTime();
 
-				calendar.add(Calendar.DATE, 2); 
-				Date plusOne = calendar.getTime();
-
-				if(ride.getDate().before(plusOne) && ride.getDate().after(minusOne)) {
+				if(ride.getDate().before(plus) && ride.getDate().after(minus)) {
 
 					for(Seat seat:rides.get(ride)) {
 						System.out.println("THIRD FOR");
@@ -97,16 +89,17 @@ public class Train2Respository {
 		return offers;
 	}
 	
-	public static TrainTicket bookTicket(UUID offerId) {
+	public static TrainTicket bookTicket(UUID id) {
 
+		LOG.info("Komme in Repository 2");
 		initialize();
 		
 		if(offer2seat.isEmpty() || offer2ride.isEmpty()) {
 			return null;
 		}
 
-		UUID seatId = offer2seat.get(offerId);
-		UUID rideId = offer2ride.get(offerId);
+		UUID seatId = offer2seat.get(id);
+		UUID rideId = offer2ride.get(id);
 		
 		if(seatId == null || rideId == null) {
 			return null;
@@ -141,14 +134,21 @@ public class Train2Respository {
 		rides.get(ride).add(seat);
 		
 		TrainTicket ticket = new TrainTicket();
-		ticket.setId(offerId);
-		ticket.setDate(ride.getDate());
+		ticket.setId(id);
 		ticket.setFrom(ride.getFrom());
 		ticket.setTo(ride.getTo());
+		ticket.setDate(ride.getDate());
 		ticket.setCategory(seat.getCategory());
 		ticket.setPrice(seat.getPrice());
 		
 		return ticket;
+	}
+	
+	private static BigDecimal generatePrice(BigDecimal p) {
+		BigDecimal maximum = p.multiply(new BigDecimal(1.4));
+		BigDecimal minimum = p.multiply(new BigDecimal(1.2));
+		BigDecimal range = maximum.subtract(minimum); 
+		return minimum.add(range.multiply(new BigDecimal(Math.random()))); 
 	}
 	
 	public static Offer convertRideToOffer(Ride ride, Seat seat) {
