@@ -40,7 +40,7 @@
         <bean id="preparePathRequestProcessor" class="at.ac.wmpm.trainbooking.processor.PreparePathRequestProcessor" />
         <bean id="mapOffers" class="at.ac.wmpm.trainbooking.processor.MapOffers" />
         <bean id="prepareBooking" class="at.ac.wmpm.trainbooking.processor.PrepareBooking" />
-        <bean id="bookingError" class="at.ac.wmpm.trainbooking.processor.BookingError" />
+        <bean id="bookingError" class="at.ac.wmpm.trainbooking.processor.BookingInputError" />
         <bean id="ticketProcessing" class="at.ac.wmpm.trainbooking.processor.TicketProcessing" />
         <bean id="twitterPost" class="at.ac.wmpm.trainbooking.processor.TwitterPost" />
 	
