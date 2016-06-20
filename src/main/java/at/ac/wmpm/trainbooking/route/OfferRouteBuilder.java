@@ -13,11 +13,15 @@ import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 
 import at.ac.wmpm.trainbooking.processor.MissingInputError;
+import at.ac.wmpm.trainbooking.processor.MyPrepareProcessor;
 
 public class OfferRouteBuilder extends RouteBuilder {
 
 	@Override
 	public void configure() throws Exception {
+		
+		errorHandler(deadLetterChannel("jms:queue:dead")
+			    .maximumRedeliveries(3).redeliveryDelay(1000).onPrepareFailure(new MyPrepareProcessor()));
 		
 		from("direct:processInput")
 		.process(new Processor() {

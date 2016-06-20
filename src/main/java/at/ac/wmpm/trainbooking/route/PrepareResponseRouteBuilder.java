@@ -3,10 +3,15 @@ package at.ac.wmpm.trainbooking.route;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 
+import at.ac.wmpm.trainbooking.processor.MyPrepareProcessor;
+
 public class PrepareResponseRouteBuilder extends RouteBuilder {
 
 	@Override
 	public void configure() throws Exception {
+		
+		errorHandler(deadLetterChannel("jms:queue:dead")
+			    .maximumRedeliveries(3).redeliveryDelay(1000).onPrepareFailure(new MyPrepareProcessor()));
 		
 		from("direct:prepareResponse")
 		.setBody(simple("null")) 
