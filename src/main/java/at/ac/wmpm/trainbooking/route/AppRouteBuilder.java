@@ -4,6 +4,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
 
 import at.ac.wmpm.trainbooking.model.Booking;
+import at.ac.wmpm.trainbooking.model.StornoID;
 import at.ac.wmpm.trainbooking.model.Ticket;
 
 public class AppRouteBuilder extends RouteBuilder{
@@ -56,11 +57,11 @@ public class AppRouteBuilder extends RouteBuilder{
 		.to("direct:multicastTickets");
 
 		
-//		//Ticket Storna
-//		rest("/stornoTicket").description("Cancel booked ticket")
-//		.consumes("application/json").produces("application/json")
-//		.post("/").description("Performs a cancellation of a ticket with is already booked").type(StornoID.class)
-//		.to("direct:storno");
+		//Ticket Storna
+		rest("/stornoTicket").description("Cancel booked ticket")
+		.consumes("application/json").produces("application/json")
+		.post("/").description("Performs a cancellation of a ticket with is already booked").type(StornoID.class)
+		.to("direct:storno");
 		
 	}
 

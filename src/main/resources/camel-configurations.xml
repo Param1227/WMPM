@@ -246,10 +246,10 @@
 			<to uri="file://target/provision/?fileName=${header.date}.txt" />
 		</route>
 		
-<!-- 		<route id="receive-storno-rest"> -->
-<!-- 			<from uri="direct:storno" /> -->
-<!-- 			<bean ref="stornoProcessor" /> -->
-<!-- 	</route>		 -->
+		<route id="receive-storno-rest">
+			<from uri="direct:storno" />
+			<bean ref="stornoProcessor" />
+	</route>		
 			
 <!-- 			<to uri="direct:deleteTicket" /> -->
 		

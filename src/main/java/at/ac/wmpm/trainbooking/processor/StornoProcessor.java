@@ -27,6 +27,9 @@ public class StornoProcessor implements Processor{
 		StornoID id = exchange.getIn().getBody(StornoID.class);
 		log.info("ID in Storno: "+id.getId());
 		this.deleteTicket(id.getId());
+		String str = "The ticket Storno was successfully ";
+		exchange.getOut().setBody(str);
+
 		
 	}
 	
