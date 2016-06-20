@@ -26,14 +26,14 @@ public class StornoProcessor implements Processor{
 		
 		StornoID id = exchange.getIn().getBody(StornoID.class);
 		log.info("ID in Storno: "+id.getId());
-		this.deleteTicket(id.getId());
+		this.stornoTicket(id.getId());
 		String str = "The ticket Storno was successfully ";
 		exchange.getOut().setBody(str);
 
 		
 	}
 	
-	public void deleteTicket(String id) {
+	public void stornoTicket(String id) {
 		log.info("ID in Storno: "+id);
 		DBCollection dbCol = mongoObject.getDB("trainbooking").getCollectionFromString("tickets");
 		log.info("Mongo DBCollection: "+ dbCol);
