@@ -16,7 +16,7 @@
 		<bean id="mongoDB" class="com.mongodb.Mongo">
 			<constructor-arg index="0" ref="mongoURI" />
 		</bean>
-		
+
 		<broker:broker persistent="false" brokerName="myBroker">
 			<broker:transportConnectors>
 			
@@ -33,27 +33,29 @@
 		</bean>
         
         <!-- BEANS -->
-        <bean id="missinginputError" class="at.ac.wmpm.booking.processor.MissingInputError" />
-        <bean id="requestError" class="at.ac.wmpm.booking.processor.RequestNotFoundError" />
-        <bean id="prepareTrain1Offers" class="at.ac.wmpm.booking.processor.PrepareTrain1Offers" />
-        <bean id="prepareTrain2Offers" class="at.ac.wmpm.booking.processor.PrepareTrain2Offers" />
-        <bean id="preparePathRequestProcessor" class="at.ac.wmpm.booking.processor.PreparePathRequestProcessor" />
-        <bean id="mapOffers" class="at.ac.wmpm.booking.processor.MapOffers" />
-        <bean id="prepareBooking" class="at.ac.wmpm.booking.processor.PrepareBooking" />
-        <bean id="bookingError" class="at.ac.wmpm.booking.processor.BookingError" />
-        <bean id="ticketProcessing" class="at.ac.wmpm.booking.processor.TicketProcessing" />
-        <bean id="twitterProcessor" class="at.ac.wmpm.booking.processor.TwitterProcessor" />
-        <bean id="stornoProcessor" class="at.ac.wmpm.booking.processor.StornoProcessor">
+       
+        <bean id="missinginputError" class="at.ac.wmpm.trainbooking.processor.MissingInputError" />
+        <bean id="requestError" class="at.ac.wmpm.trainbooking.processor.RequestNotFoundError" />
+        <bean id="prepareTrain1Offers" class="at.ac.wmpm.trainbooking.processor.PrepareTrain1Offers" />
+        <bean id="prepareTrain2Offers" class="at.ac.wmpm.trainbooking.processor.PrepareTrain2Offers" />
+        <bean id="preparePathRequestProcessor" class="at.ac.wmpm.trainbooking.processor.PreparePathRequestProcessor" />
+        <bean id="mapOffers" class="at.ac.wmpm.trainbooking.processor.MapOffers" />
+        <bean id="prepareBooking" class="at.ac.wmpm.trainbooking.processor.PrepareBooking" />
+        <bean id="bookingError" class="at.ac.wmpm.trainbooking.processor.BookingInputError" />
+        <bean id="ticketProcessing" class="at.ac.wmpm.trainbooking.processor.TicketProcessing" />
+        <bean id="twitterPost" class="at.ac.wmpm.trainbooking.processor.TwitterPost" />
+		<bean id="twitterProcessor" class="at.ac.wmpm.trainbooking.processor.TwitterProcessor" />
+        <bean id="stornoProcessor" class="at.ac.wmpm.trainbooking.processor.StornoProcessor">
         	 <property name="mongo" ref="mongoDB" />
         </bean>
 
      	
 		<!-- ROUTES -->
-		<bean id="appRoute" class="at.ac.wmpm.booking.route.AppRouteBuilder" />
-		<bean id="offerRoute" class="at.ac.wmpm.booking.route.OfferRouteBuilder"/>
-		<bean id="getTrainsRoute" class="at.ac.wmpm.booking.route.GetTrainsRouteBuilder"/>
-		<bean id="prepareResponse" class="at.ac.wmpm.booking.route.PrepareResponseRouteBuilder"/>
-		<bean id="ticketRoutes" class="at.ac.wmpm.booking.route.MulticastRouteBuilder" />
+		<bean id="appRoute" class="at.ac.wmpm.trainbooking.route.AppRouteBuilder" />
+		<bean id="offerRoute" class="at.ac.wmpm.trainbooking.route.OfferRouteBuilder"/>
+		<bean id="getTrainsRoute" class="at.ac.wmpm.trainbooking.route.GetTrainsRouteBuilder"/>
+		<bean id="prepareResponse" class="at.ac.wmpm.trainbooking.route.PrepareResponseRouteBuilder"/>
+		<bean id="ticketRoutes" class="at.ac.wmpm.trainbooking.route.TicketRouteBuilder" />
 	
 		
 		
@@ -80,7 +82,7 @@
 			<routeBuilder ref="train2Offers" /> 
 			<routeBuilder ref="prepareResponse" /> 
 			<routeBuilder ref="getTrainsRoute" /> 
-			<routeBuilder ref="train1Offers" /> 
+			<routeBuilder ref="train1Offers" />
 			<routeBuilder ref="train2Offers" />
 			<routeBuilder ref="train1Booking" />
 			<routeBuilder ref="train2Booking" /> 
@@ -90,10 +92,10 @@
 		<dataFormats>
 			<json id="pojo2json" library="Jackson" disableFeatures="FAIL_ON_EMPTY_BEANS" />
 			<json id="trainticketJson" library="Jackson"
-				unmarshalTypeName="at.ac.wmpm.booking.model.TrainTicket"
+				unmarshalTypeName="at.ac.wmpm.trainbooking.model.TrainTicket"
 				disableFeatures="FAIL_ON_EMPTY_BEANS" />
 			<json id="bookingJson" library="Jackson"
-				unmarshalTypeName="at.ac.wmpm.booking.model.Booking" />
+				unmarshalTypeName="at.ac.wmpm.trainbooking.model.Booking" />
 			<xmljson id="xmljson" />
 			
 		</dataFormats>
@@ -108,7 +110,7 @@
 					<process ref="requestError" />  
 				</when>
 				<otherwise>
-				<!-- 	<enrich uri="direct:addWeather" strategyRef="aggregationBean" />  --> 
+				
 				</otherwise>
 			</choice> 	
 		</route>
@@ -116,7 +118,7 @@
 		<route streamCache="true">
 			<from uri="direct:getTrain1" />
 			<log message="Ich komme in die Camel Config" />
-			<to uri="http://localhost:8081/req/" />
+			<to uri="http://localhost:8081/off/" />
 			<log message="Response from Train 1: ${body}" />
 			<marshal ref="xmljson" />
 			<process ref="prepareTrain1Offers" />
@@ -126,7 +128,7 @@
 		<route streamCache="true">
 			<from uri="direct:getTrain2" />
 			<log message="Ich komme in die Camel Config 2" />
-			<to uri="http://localhost:8083/request/" />
+			<to uri="http://localhost:8082/offer/" />
 			<log message="Response from Train 2: ${body}" />
 			<process ref="prepareTrain2Offers" />
 			<marshal ref="pojo2json" />	
@@ -183,7 +185,7 @@
 			<setBody>
 				<constant>null</constant>
 			</setBody>
-		 	<to uri="http://localhost:8083/book/" />  
+		 	<to uri="http://localhost:8082/book/" />  
 		 	<log message="is the body null?1: ${body}"/>
 			<to uri="direct:taproute" />
 		</route>
