@@ -16,7 +16,7 @@
 		<bean id="mongoDB" class="com.mongodb.Mongo">
 			<constructor-arg index="0" ref="mongoURI" />
 		</bean>
-
+		
 		<broker:broker persistent="false" brokerName="myBroker">
 			<broker:transportConnectors>
 			
@@ -42,8 +42,10 @@
         <bean id="prepareBooking" class="at.ac.wmpm.booking.processor.PrepareBooking" />
         <bean id="bookingError" class="at.ac.wmpm.booking.processor.BookingError" />
         <bean id="ticketProcessing" class="at.ac.wmpm.booking.processor.TicketProcessing" />
-        <bean id="twitterPost" class="at.ac.wmpm.booking.processor.TwitterPost" />
-	
+        <bean id="twitterProcessor" class="at.ac.wmpm.booking.processor.TwitterProcessor" />
+        <bean id="stornoProcessor" class="at.ac.wmpm.booking.processor.StornoProcessor">
+        	 <property name="mongo" ref="mongoDB" />
+        </bean>
 
      	
 		<!-- ROUTES -->
@@ -51,7 +53,7 @@
 		<bean id="offerRoute" class="at.ac.wmpm.booking.route.OfferRouteBuilder"/>
 		<bean id="getTrainsRoute" class="at.ac.wmpm.booking.route.GetTrainsRouteBuilder"/>
 		<bean id="prepareResponse" class="at.ac.wmpm.booking.route.PrepareResponseRouteBuilder"/>
-		<bean id="ticketRoutes" class="at.ac.wmpm.booking.route.TicketRouteBuilder" />
+		<bean id="ticketRoutes" class="at.ac.wmpm.booking.route.MulticastRouteBuilder" />
 	
 		
 		
@@ -239,6 +241,15 @@
 			<convertBodyTo type="java.lang.String" />
 			<to uri="file://target/provision/?fileName=${header.date}.txt" />
 		</route>
+		
+<!-- 		<route id="receive-storno-rest"> -->
+<!-- 			<from uri="direct:storno" /> -->
+<!-- 			<bean ref="stornoProcessor" /> -->
+<!-- 	</route>		 -->
+			
+<!-- 			<to uri="direct:deleteTicket" /> -->
+		
+		
 		
 	</camelContext>	 
 </beans>

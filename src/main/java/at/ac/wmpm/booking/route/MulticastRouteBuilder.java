@@ -4,15 +4,15 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.twitter.TwitterComponent;
 
 import at.ac.wmpm.booking.processor.PersistTicket;
-import at.ac.wmpm.booking.processor.TwitterPost;
+import at.ac.wmpm.booking.processor.TwitterProcessor;
 
-public class TicketRouteBuilder extends RouteBuilder {
+public class MulticastRouteBuilder extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
     	
     	PersistTicket persist = new PersistTicket();
-    	TwitterPost twitter = new TwitterPost();
+    	TwitterProcessor twitter = new TwitterProcessor();
         
 		from("direct:persistTicket").process(persist)
 			.to("mongodb:mongoDB?database=trainbooking&collection=tickets&operation=insert");

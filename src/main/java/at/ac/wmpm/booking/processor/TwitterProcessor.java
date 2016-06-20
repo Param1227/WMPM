@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.wmpm.booking.model.Ticket;
 
-public class TwitterPost  implements Processor{
+public class TwitterProcessor  implements Processor{
 	
-	private static final Logger log = LoggerFactory.getLogger(TwitterPost.class);
+	private static final Logger log = LoggerFactory.getLogger(TwitterProcessor.class);
 
 	
 	@Override
