@@ -43,6 +43,11 @@ public class AppRouteBuilder extends RouteBuilder{
 		.post("/").description("Persist ticket").type(Ticket.class)
 		.to("direct:persistTicket");
 		
+		// Email
+		rest("/email").description("Send the booked ticket").
+		consumes("application/json").produces("application/json")
+		.post("/").description("Email booked ticket").type(Ticket.class).to("direct:emailTicket");
+		
 		//MulticastTicketWrite
 		//eMail, Twitter, Persist into Database
 		rest("/multicastTicket").description("performs multicast")

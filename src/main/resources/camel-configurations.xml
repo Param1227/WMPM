@@ -45,6 +45,7 @@
         <bean id="ticketProcessing" class="at.ac.wmpm.trainbooking.processor.TicketProcessing" />
         <bean id="twitterPost" class="at.ac.wmpm.trainbooking.processor.TwitterPost" />
 		<bean id="twitterProcessor" class="at.ac.wmpm.trainbooking.processor.TwitterProcessor" />
+		<bean id="createMail" class="at.ac.wmpm.trainbooking.processor.CreateMailTicket" />
         <bean id="stornoProcessor" class="at.ac.wmpm.trainbooking.processor.StornoProcessor">
         	 <property name="mongo" ref="mongoDB" />
         </bean>
@@ -56,6 +57,7 @@
 		<bean id="getTrainsRoute" class="at.ac.wmpm.trainbooking.route.GetTrainsRouteBuilder"/>
 		<bean id="prepareResponse" class="at.ac.wmpm.trainbooking.route.PrepareResponseRouteBuilder"/>
 		<bean id="ticketRoutes" class="at.ac.wmpm.trainbooking.route.TicketRouteBuilder" />
+		<bean id="emailTicket" class="at.ac.wmpm.trainbooking.route.EmailTicketRouteBuilder" />
 	
 		
 		
@@ -87,7 +89,7 @@
 			<routeBuilder ref="train1Booking" />
 			<routeBuilder ref="train2Booking" /> 
 			<routeBuilder ref="ticketRoutes" /> 
-			
+			<routeBuilder ref="emailTicket"/>
 		
 		<dataFormats>
 			<json id="pojo2json" library="Jackson" disableFeatures="FAIL_ON_EMPTY_BEANS" />
@@ -228,10 +230,10 @@
 		
 		<route>
 			<from uri="direct:multicastTickets" />
-			<log message="Lukas direct: multicastTickets "/>
+			<log message="direct: multicastTickets "/>
 			<multicast>
 				<to uri="direct:persistTicket" />
-				<!--<to uri="direct:emailTicket" /> -->
+				<to uri="direct:emailTicket" />
 				<to uri="direct:twitterTicket" /> 
 			</multicast>
 		</route>
