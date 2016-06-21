@@ -21,27 +21,38 @@ public class WeatherAggregator implements AggregationStrategy {
 
 	@Override
 	public Exchange aggregate ( Exchange original , Exchange newExchange ) {		
-
-		if ( original == null ) {
-			return newExchange ;
-		}
-		@SuppressWarnings("unchecked")
-		List<Offer> offers = (List<Offer>) original.getIn().getBody(List.class);
-		AggregatedOffer aggregatedOffer = new AggregatedOffer();
-		aggregatedOffer.setOffer(offers);
-
-		ObjectMapper mapper = new ObjectMapper();
-		String newBody = newExchange.getIn().getBody(String.class);
-		Weather weather = new Weather(newBody, newBody);      
-		try {
-			weather = mapper.readValue(newBody, new TypeReference<Weather>() { });
-
-		} catch (IOException e) { }
-		if(weather.getCity() != null) {
-			return newExchange;
-		}
-		
-		original.getIn().setBody(aggregatedOffer);
-		return original;
+		   @SuppressWarnings("unchecked")
+		   List<Offer> originalBody = (List<Offer>) original.getIn().getBody(List.class);
+		   String newResponse = newExchange.getIn().getBody(String.class);
+		   LOG.info("This is the newResponse:");
+		   Object merge = (originalBody + newResponse);
+		   if (original.getPattern().isOutCapable()) {
+	            original.getOut().setBody(merge);
+	        } else {
+	            original.getIn().setBody(merge);
+	        }
+	        return original;
+	    }
+	     
 	}
-}
+//		@SuppressWarnings("unchecked")
+//		List<Offer> offers = (List<Offer>) original.getIn().getBody(List.class);
+//		AggregatedOffer aggregatedOffer = new AggregatedOffer();
+//		aggregatedOffer.setOffer(offers);
+//
+//		ObjectMapper mapper = new ObjectMapper();
+//		String newBody = newExchange.getIn().getBody(String.class);
+//		Weather weather = new Weather(newBody, newBody);      
+//		try {
+//			weather = mapper.readValue(newBody, new TypeReference<Weather>() { });
+//
+//		} catch (IOException e) { }
+//		LOG.info("DAMN!");
+//		if(weather.getCity() != null) {
+//			return newExchange;
+//		}
+//
+//		original.getIn().setBody(aggregatedOffer);
+//		return original;
+//	}
+//}

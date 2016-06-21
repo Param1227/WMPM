@@ -24,6 +24,7 @@ public class Weather {
         this.city = city;
         this.weather = weather;
 	}
+
 	
 	@Override
 	public String toString() {

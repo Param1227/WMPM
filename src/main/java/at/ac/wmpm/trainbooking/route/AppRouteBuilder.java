@@ -23,6 +23,7 @@ public class AppRouteBuilder extends RouteBuilder{
 
 		.get("/{date}/{from}/{to}").description("Get offers. Try for example:")
 		.to("direct:processInput");
+		//.to("direct:processWeatherInput");
 
 		// Booking
 		rest("/booking").description("Book an offer")

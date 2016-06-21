@@ -49,6 +49,10 @@
         <bean id="stornoProcessor" class="at.ac.wmpm.trainbooking.processor.StornoProcessor">
         	 <property name="mongo" ref="mongoDB" />
         </bean>
+        
+        <bean id="weatherAggregator" class="at.ac.wmpm.trainbooking.service.WeatherAggregator" />
+        
+        
 
      	
 		<!-- ROUTES -->
@@ -92,6 +96,7 @@
 			<routeBuilder ref="ticketRoutes" /> 
 			<routeBuilder ref="emailTicket"/>
 			<routeBuilder ref="prepareWeatherResponse" /> 
+			
 		
 		<dataFormats>
 			<json id="pojo2json" library="Jackson" disableFeatures="FAIL_ON_EMPTY_BEANS" />
@@ -114,9 +119,20 @@
 					<process ref="requestError" />  
 				</when>
 				<otherwise>
-				<enrich> <!-- strategyRef="aggregationBean" > --> 
-						<constant>direct:processWeatherInput</constant>
-						</enrich>
+<!-- 						<pollEnrich timeout="10000"> -->
+<!-- 	    						<constant>file://Users/Malinda/git/WMPM/?fileName=enrich.txt</constant> -->
+<!-- 									<log message="Where the hell is the file?" /> -->
+<!-- 	 					 </pollEnrich> -->
+							<enrich strategyRef="weatherAggregator">
+							<constant>direct:processWeatherInput</constant>
+							
+							</enrich>
+<!-- 						<aggregate strategyRef="processWeatherInput"> -->
+<!-- 						<correlationExpression> -->
+<!--                				 <simple>${headers.to}</simple> -->
+<!--            					 </correlationExpression> -->
+<!--  						 <constant>direct:processWeatherInput</constant> -->
+<!-- 					</aggregate> -->
 				</otherwise>
 			</choice> 	
 		</route>
