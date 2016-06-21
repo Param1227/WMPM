@@ -19,18 +19,18 @@
 	</bean>
 
 
-	<broker:broker persistent="false" brokerName="myBroker">
+	<broker:broker persistent="false" brokerName="broker">
 		<broker:transportConnectors>
 
 			<broker:transportConnector name="vm"
-				uri="vm://myBroker" />
+				uri="vm://broker" />
 			<!-- expose a TCP transport for clients to use <broker:transportConnector 
 				name="tcp" uri="tcp://localhost:61610" /> -->
 		</broker:transportConnectors>
 	</broker:broker>
 
 	<bean id="jms" class="org.apache.activemq.camel.component.ActiveMQComponent">
-		<property name="brokerURL" value="vm://myBroker" />
+		<property name="brokerURL" value="vm://broker" />
 	</bean>
 
 	<!-- BEANS -->
@@ -55,9 +55,10 @@
 	<bean id="prepareStornoID" class="at.ac.wmpm.trainbooking.processor.PrepareStornoID">
 		<property name="stornoProcessor" ref="stornoProcessor" />
 	</bean>
-	
+
 	<bean id="myPrepareProcessor" class="at.ac.wmpm.trainbooking.processor.MyPrepareProcessor" />
 	<bean id="deadLetterProcessor" class="at.ac.wmpm.trainbooking.processor.DeadLetterProcessor" />
+	
 
 	<!-- ROUTES -->
 	<bean id="appRoute" class="at.ac.wmpm.trainbooking.route.AppRouteBuilder" />
@@ -68,8 +69,6 @@
 	<bean id="ticketRoutes" class="at.ac.wmpm.trainbooking.route.TicketRouteBuilder" />
 	<bean id="emailTicket" class="at.ac.wmpm.trainbooking.route.EmailTicketRouteBuilder" />
 	<bean id="deadLetterRoute" class="at.ac.wmpm.trainbooking.route.DeadLetterRoute" />
-
-
 
 	<!-- <bean id="prepResponseRoute" class="at.ac.wmpm.booking.route.PrepareResponseRouteBuilder"/> -->
 
@@ -101,6 +100,7 @@
 		<routeBuilder ref="ticketRoutes" />
 		<routeBuilder ref="emailTicket" />
 		<routeBuilder ref="deadLetterRoute" />
+		
 
 		<dataFormats>
 			<json id="pojo2json" library="Jackson" disableFeatures="FAIL_ON_EMPTY_BEANS" />
@@ -113,8 +113,8 @@
 
 		</dataFormats>
 
-		<!-- get offers form train1 + sort route -->
-		<route id="rest-forward-request" streamCache="true">
+		<!-- get offers and sort route -->
+		<route id="forward-request" streamCache="true">
 			<from uri="direct:forward" />
 			<process ref="mapOffers" />
 			<choice>
@@ -123,7 +123,7 @@
 					<process ref="requestError" />
 				</when>
 				<otherwise>
-
+					
 				</otherwise>
 			</choice>
 		</route>
@@ -226,9 +226,9 @@
 							<simple>${date:now:yyyyMMdd}</simple>
 						</setHeader>
 					</wireTap>
-					<process ref="ticketProcessing" />
+					<bean ref="ticketProcessing" />
 
-					<!-- <to uri="jms:queue:sendOffers"/> -->
+					<wireTap uri="jms:queue:sendOffers" />
 				</otherwise>
 			</choice>
 		</route>
@@ -245,8 +245,10 @@
 			<multicast>
 				<to uri="direct:persistTicket" />
 				<to uri="direct:emailTicket" />
+				<!--  <process ref="ticketProcessing" /> -->
 				<to uri="direct:twitterTicket" />
 			</multicast>
+
 		</route>
 
 
@@ -257,12 +259,12 @@
 			<to uri="file://target/provision/?fileName=${header.date}.txt" />
 		</route>
 
-		<route id="receive-storno-rest">
+		<route id="storno-rest">
 			<from uri="direct:storno" />
 			<bean ref="stornoProcessor" />
 		</route>
 
-		<route id="receive-storno-mail">
+		<route id="storno-via-mail">
 			<from
 				uri="imaps://imap.gmail.com?username=wmpm16.g6@gmail.com&amp;password=wmpm2016&amp;from=wmpm16.g6@gmail.com&amp;unseen=true&amp;consumer.delay=20000" />
 			<bean ref="stornoMailProcessor" />

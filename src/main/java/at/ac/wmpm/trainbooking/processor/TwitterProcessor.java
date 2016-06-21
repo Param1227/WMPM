@@ -12,15 +12,15 @@ import at.ac.wmpm.trainbooking.model.Ticket;
 
 public class TwitterProcessor  implements Processor{
 	
-	private static final Logger log = LoggerFactory.getLogger(TwitterProcessor.class);
+	private static final Logger LOG = LoggerFactory.getLogger(TwitterProcessor.class);
 
 	
 	@Override
 	public void process(Exchange exchange) throws Exception {
 		
 		Ticket ticket = exchange.getIn().getBody(Ticket.class);
-		
-		log.debug("TicketDate:"+ ticket.getDate());
+		LOG.info("TwitterProcessorBody: " + exchange.getIn().getBody());
+		LOG.debug("TicketDate:"+ ticket.getDate());
 
 		//generate unigue datetime
 		Date d = new Date();
@@ -34,7 +34,7 @@ public class TwitterProcessor  implements Processor{
             exchange.setProperty(Exchange.ROUTE_STOP, Boolean.TRUE);
             exchange.getOut().setBody("Cannot post on twitter because length of the name oder e-mail adress is to long! (length:"+str.length()+")");
         } else {
-			log.debug("Twitterlength:" + str.length());
+			LOG.debug("Twitterlength:" + str.length());
 			exchange.getOut().setBody(str);
         }
 		

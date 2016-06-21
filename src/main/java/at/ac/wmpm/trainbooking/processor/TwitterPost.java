@@ -18,7 +18,7 @@ public class TwitterPost  implements Processor{
 	public void process(Exchange exchange) throws Exception {
 		
 		Ticket ticket = exchange.getIn().getBody(Ticket.class);
-		
+		log.info("TwitterProcessorBody: " + exchange.getIn().getBody());
 		log.debug("TicketDate:"+ ticket.getDate());
 
 		//generate unigue datetime

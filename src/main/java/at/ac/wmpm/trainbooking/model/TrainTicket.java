@@ -67,7 +67,7 @@ public class TrainTicket {
 
 	@Override
 	public String toString() {
-		return "TrainTicket [id=" + id + ", from=" + from + ", to=" + to + ", date=" + date + ", category=" + category + ", window="
+		return "TrainTicket [id=" + id + ", from=" + from + ", to=" + to + ", date=" + date + ", category=" + category 
 				+ ", price=" + price + "]";
 	}
 	

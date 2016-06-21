@@ -36,7 +36,7 @@ public class MapOffers implements Processor {
 
 			if (offers != null) {
 				Collections.sort(offers);
-//				exchange.getOut().setHeader("to", offers.get(0).getTo());
+				exchange.getOut().setHeader("to", offers.get(0).getTo());
 			}
 
 
