@@ -40,8 +40,8 @@ public class CreateMailTicket implements Processor {
         map.put("TO", ticket.getEmail());
         //map.put("TO", "cartoon.entertainin7@gmail.com");
         map.put("From", "wmpm16.g6@gmail.com");
-        //map.put("Subject", "FUCK THIS SHIT!");
-        map.put("Subject", ticket.getId() + " FUCK Your ticket to " + ticket.getTo());
+        //map.put("Subject", "This is your ticket!");
+        map.put("Subject", ticket.getId() + " Your ticket to " + ticket.getTo());
         exchange.getOut().setHeaders(map);         
     }
 }

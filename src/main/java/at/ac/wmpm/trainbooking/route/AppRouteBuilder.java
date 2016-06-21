@@ -54,6 +54,13 @@ public class AppRouteBuilder extends RouteBuilder{
 		.consumes("application/json").produces("application/json")
 		.post("/").description("Performs multicast: sends mail, posts and persists a ticket").type(Ticket.class)
 		.to("direct:multicastTickets");
+		
+		// Weather
+				rest("/weather").description("Get weather")
+				.consumes("application/json").produces("application/json")
+
+				.get("/{to}").description("Get weather. Try for example:")
+				.to("direct:processWeatherInput");
 
 		
 //		//Ticket Storna
