@@ -125,14 +125,13 @@
 <!-- 	 					 </pollEnrich> -->
 							<enrich strategyRef="weatherAggregator">
 							<constant>direct:processWeatherInput</constant>
-							
+							<to uri="processInput" />			
 							</enrich>
 <!-- 						<aggregate strategyRef="processWeatherInput"> -->
 <!-- 						<correlationExpression> -->
 <!--                				 <simple>${headers.to}</simple> -->
 <!--            					 </correlationExpression> -->
-<!--  						 <constant>direct:processWeatherInput</constant> -->
-<!-- 					</aggregate> -->
+<!--  						</aggregate> -->
 				</otherwise>
 			</choice> 	
 		</route>

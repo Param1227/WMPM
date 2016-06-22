@@ -12,8 +12,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import at.ac.wmpm.trainbooking.model.Offer;
-import at.ac.wmpm.trainbooking.model.AggregatedOffer;
 import at.ac.wmpm.trainbooking.model.Weather;
+import at.ac.wmpm.trainbooking.model.AggregatedOffer;
 
 
 public class WeatherAggregator implements AggregationStrategy {
@@ -22,10 +22,15 @@ public class WeatherAggregator implements AggregationStrategy {
 	@Override
 	public Exchange aggregate ( Exchange original , Exchange newExchange ) {		
 		   @SuppressWarnings("unchecked")
-		   List<Offer> originalBody = (List<Offer>) original.getIn().getBody(List.class);
+		   List<Offer> originalBody = (List<Offer>) original.getIn().getBody();
+//		   AggregatedOffer aggregatedOffer = new AggregatedOffer();
+//		   aggregatedOffer.setOffer(originalBody);
+		   
 		   String newResponse = newExchange.getIn().getBody(String.class);
+		   
 		   LOG.info("This is the newResponse:");
-		   Object merge = (originalBody + newResponse);
+		   Object merge = (originalBody + newResponse + " The Weather seems nice. :) We wish you enjoy your journey!");
+		   
 		   if (original.getPattern().isOutCapable()) {
 	            original.getOut().setBody(merge);
 	        } else {
@@ -35,24 +40,3 @@ public class WeatherAggregator implements AggregationStrategy {
 	    }
 	     
 	}
-//		@SuppressWarnings("unchecked")
-//		List<Offer> offers = (List<Offer>) original.getIn().getBody(List.class);
-//		AggregatedOffer aggregatedOffer = new AggregatedOffer();
-//		aggregatedOffer.setOffer(offers);
-//
-//		ObjectMapper mapper = new ObjectMapper();
-//		String newBody = newExchange.getIn().getBody(String.class);
-//		Weather weather = new Weather(newBody, newBody);      
-//		try {
-//			weather = mapper.readValue(newBody, new TypeReference<Weather>() { });
-//
-//		} catch (IOException e) { }
-//		LOG.info("DAMN!");
-//		if(weather.getCity() != null) {
-//			return newExchange;
-//		}
-//
-//		original.getIn().setBody(aggregatedOffer);
-//		return original;
-//	}
-//}

@@ -11,6 +11,7 @@ public class AggregatedOffer implements Serializable{
 	@JsonProperty("offers")
 	private List<Offer> offers;
 	private String weather;
+	private Weather newWeather;
 	
 	public List<Offer> getOffer() {
 		return offers;
@@ -25,8 +26,15 @@ public class AggregatedOffer implements Serializable{
 		this.weather = weather;
 	}
 	
+		public Weather getNewWeather() {
+		return newWeather;
+	}
+	public void setNewWeather(Weather newWeather) {
+		this.newWeather = newWeather;
+	}
+	
 	@Override
 	public String toString() {
-		return "AggregatedOffer [offers=" + offers + ", weather=" + weather + "]";
+		return "AggregatedOffer [offers=" + offers + ", weather=" + newWeather + "]";
 	}
 }

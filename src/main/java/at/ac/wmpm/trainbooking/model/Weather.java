@@ -5,6 +5,7 @@ public class Weather {
 	
 	private String city;
 	private String weather;
+	private Weather newWeather;
 	
 	
 	public String getWeather() {
@@ -29,5 +30,11 @@ public class Weather {
 	@Override
 	public String toString() {
 		return "Weather [city=" + city + ", weather=" + weather + "]";
+	}
+	public Weather getNewWeather() {
+		return newWeather;
+	}
+	public void setNewWeather(Weather newWeather) {
+		this.newWeather = newWeather;
 	}
 }

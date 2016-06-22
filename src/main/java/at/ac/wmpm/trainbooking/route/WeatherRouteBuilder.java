@@ -7,7 +7,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
-import at.ac.wmpm.trainbooking.processor.MissingInputError;
+import at.ac.wmpm.trainbooking.processor.WeatherError;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,16 +35,15 @@ public class WeatherRouteBuilder extends RouteBuilder {
 				}
 			})
 			.choice()
-			.when(simple("${body} == null")).bean(new MissingInputError(), "process")
+			.when(simple("${body} == null")).bean(new WeatherError(), "process")
 			.otherwise()
 			.log("this is the header to: ${header.to}")
 			.setBody().simple("{\"city\": \"${header.to}\" }")
 			.enrich("mongodb:mongoDB?database=trainbooking&collection=weather&operation=findOneByQuery")
 			.choice()
-			.when(simple("${body} == null")).bean(new MissingInputError(), "process")
+			.when(simple("${body} == null")).bean(new WeatherError(), "process")
 			.otherwise()
 			.log("Weather is herer!");
-			//.to("direct:prepareWeatherResponse");
 		}
 
 	}
