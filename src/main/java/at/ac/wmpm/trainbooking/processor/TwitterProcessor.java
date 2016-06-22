@@ -22,7 +22,6 @@ public class TwitterProcessor  implements Processor{
 		LOG.info("TwitterProcessorBody: " + exchange.getIn().getBody());
 		LOG.debug("TicketDate:"+ ticket.getDate());
 
-		//generate unigue datetime
 		Date d = new Date();
 		String unitime = ""+d.getTime();
 		

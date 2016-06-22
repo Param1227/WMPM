@@ -45,7 +45,6 @@
 	<bean id="prepareBooking" class="at.ac.wmpm.trainbooking.processor.PrepareBooking" />
 	<bean id="bookingError" class="at.ac.wmpm.trainbooking.processor.BookingInputError" />
 	<bean id="ticketProcessing" class="at.ac.wmpm.trainbooking.processor.TicketProcessing" />
-	<bean id="twitterPost" class="at.ac.wmpm.trainbooking.processor.TwitterPost" />
 	<bean id="twitterProcessor" class="at.ac.wmpm.trainbooking.processor.TwitterProcessor" />
 	<bean id="createMail" class="at.ac.wmpm.trainbooking.processor.CreateMailTicket" />
 	<bean id="stornoProcessor" class="at.ac.wmpm.trainbooking.processor.StornoProcessor">
