@@ -12,7 +12,7 @@ public class DeadLetterProcessor implements Processor {
 	
 	@Override
 	public void process(Exchange exchange) throws Exception {
-		exchange.getOut().setBody("Please choose one of the available destinations and a correct date!");
+		exchange.getOut().setBody("Something bad happened");
 		exchange.getOut().setHeaders(exchange.getIn().getHeaders());
 	}
 }

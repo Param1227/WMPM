@@ -22,11 +22,11 @@ public class MyPrepareProcessor implements Processor {
         Exception cause = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Exception.class);
         headers.put("FailedBecause", cause.getMessage());
         headers.put("FailedRoute", failedEndpoint);
-        exchange.getIn().setHeader(Exchange.CONTENT_TYPE, "text/plain");
-		exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, 400);
-        exchange.getIn().setHeader("FailedBecause", cause.getMessage());
-        exchange.getIn().setHeader("FailedRoute", failedEndpoint);
-        exchange.getIn().setBody("Something bad happened");
+        //exchange.getOut().setHeader(Exchange.CONTENT_TYPE, "text/plain");
+		//exchange.getOut().setHeader(Exchange.HTTP_RESPONSE_CODE, 400);
+        exchange.getOut().setHeader("FailedBecause", cause.getMessage());
+        exchange.getOut().setHeader("FailedRoute", failedEndpoint);
+        exchange.getOut().setBody("Something bad happened");
     }
 
 }
