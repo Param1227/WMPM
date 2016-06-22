@@ -20,9 +20,6 @@ public class PrepareResponseRouteBuilder extends RouteBuilder {
 		.log("${header.date}/${header.from}/${header.to}")
 		.setHeader("CamelHttpMethod", constant("GET"))
 		.enrich("direct:getTrains")
-		.setBody(exchangeProperty(Exchange.GROUPED_EXCHANGE))
-		.log("EXCHANGE-HEADER: ${header.date}}")
-		.log("EXCHANGE-BODY: ${body}")
 		.to("direct:forward");
 	}
 

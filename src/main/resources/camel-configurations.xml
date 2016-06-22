@@ -57,6 +57,7 @@
 	</bean>
 	<bean id="myPrepareProcessor" class="at.ac.wmpm.trainbooking.processor.MyPrepareProcessor" />
 	<bean id="deadLetterProcessor" class="at.ac.wmpm.trainbooking.processor.DeadLetterProcessor" />
+	<bean id="processOfferInput" class="at.ac.wmpm.trainbooking.processor.ProcessOfferInput" />
 	
 	<bean id="weatherAggregator" class="at.ac.wmpm.trainbooking.service.WeatherAggregator" />
 

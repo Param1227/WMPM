@@ -24,21 +24,7 @@ public class OfferRouteBuilder extends RouteBuilder {
 			    .maximumRedeliveries(3).redeliveryDelay(1000).onPrepareFailure(new MyPrepareProcessor()));
 		
 		from("direct:processInput")
-		.process(new Processor() {
-			public void process(Exchange exchange) throws ParseException {
-				try {
-					Message in = exchange.getIn();
-					String time = (String) in.getHeader("date");
-					Calendar calender = new GregorianCalendar();
-					Date nDate = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH).parse(time);
-					calender.setTime(nDate);
-					in.setHeader("date", calender.getTimeInMillis());
-					exchange.getIn().setBody("date was correctly transformed");
-				} catch (Exception e) {
-					exchange.getIn().setBody(null);
-				}
-			}
-		})
+		.process("processOfferInput")
 		.choice()
 		.when(simple("${body} == null")).bean(new MissingInputError(), "process")
 		.otherwise()
@@ -52,7 +38,6 @@ public class OfferRouteBuilder extends RouteBuilder {
 		.choice()
 		.when(simple("${body} == null")).bean(new MissingInputError(), "process")
 		.otherwise()
-		.log("Hier komme ich hin 2")
 		.to("direct:prepareResponse");
 	}
 
