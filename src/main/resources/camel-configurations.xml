@@ -57,7 +57,6 @@
 	<bean id="myPrepareProcessor" class="at.ac.wmpm.trainbooking.processor.MyPrepareProcessor" />
 	<bean id="deadLetterProcessor" class="at.ac.wmpm.trainbooking.processor.DeadLetterProcessor" />
 	<bean id="processOfferInput" class="at.ac.wmpm.trainbooking.processor.ProcessOfferInput" />
-	
 	<bean id="weatherAggregator" class="at.ac.wmpm.trainbooking.service.WeatherAggregator" />
 
 	<!-- ROUTES -->
@@ -66,7 +65,7 @@
 	<bean id="getTrainsRoute" class="at.ac.wmpm.trainbooking.route.GetTrainsRouteBuilder" />
 	<bean id="prepareResponse"
 		class="at.ac.wmpm.trainbooking.route.PrepareResponseRouteBuilder" />
-	<bean id="ticketRoutes" class="at.ac.wmpm.trainbooking.route.TicketRouteBuilder" />
+	<bean id="ticketRoutes" class="at.ac.wmpm.trainbooking.route.MulticastRouteBuilder" />
 	<bean id="emailTicket" class="at.ac.wmpm.trainbooking.route.EmailTicketRouteBuilder" />
 	<bean id="deadLetterRoute" class="at.ac.wmpm.trainbooking.route.DeadLetterRoute" />
 	<bean id="prepareWeatherResponse" class="at.ac.wmpm.trainbooking.route.WeatherRouteBuilder" />
